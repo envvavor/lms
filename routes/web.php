@@ -27,7 +27,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/courses/{course}/enrollments', [EnrollmentController::class, 'manageEnrollments'])->name('courses.enrollments');
 
     // Post routes
-    Route::resource('posts', PostController::class);
+    Route::resource('posts', PostController::class)->except(['create', 'store']);
     Route::get('/courses/{course}/posts/create', [PostController::class, 'create'])->name('posts.create');
     Route::post('/courses/{course}/posts', [PostController::class, 'store'])->name('posts.store');
 

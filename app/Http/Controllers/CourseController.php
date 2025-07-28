@@ -17,7 +17,7 @@ class CourseController extends Controller
         
         if ($user->isAdmin()) {
             // Admin can see all courses
-            $courses = Course::with('posts')->get();
+            $courses = Course::with('posts')->paginate(12);
         } elseif ($user->isTeacher()) {
             // Teachers can see their own courses and courses they're enrolled in
             $courses = Course::where('user_id', $user->id)
@@ -25,10 +25,10 @@ class CourseController extends Controller
                     $query->where('user_id', $user->id);
                 })
                 ->with('posts')
-                ->get();
+                ->paginate(10);
         } else {
             // Regular users can only see courses they're enrolled in
-            $courses = $user->enrolledCourses()->with('posts')->get();
+            $courses = $user->enrolledCourses()->with('posts')->paginate(12);
         }
         
         return view('courses.index', compact('courses'));
