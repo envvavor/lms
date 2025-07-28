@@ -3,6 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate, max-age=0">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <meta http-equiv="Last-Modified" content="{{ date('D, d M Y H:i:s') }} GMT">
     <title>@yield('title', 'LMS - Learning Management System')</title>
     
     <!-- Bootstrap 5 CSS -->
@@ -572,6 +576,14 @@
                             </a>
                         </li>
                         @endif
+                        @if(Auth::user()->isAdmin())
+                        <li class="nav-item">
+                            <a class="nav-link {{ request()->routeIs('users.*') ? 'active' : '' }}" href="{{ route('users.index') }}">
+                                <i class="fas fa-users me-1"></i>
+                                Users
+                            </a>
+                        </li>
+                        @endif
                     @endauth
                 </ul>
 
@@ -606,7 +618,7 @@
                                 <li><h6 class="dropdown-header">{{ Auth::user()->name }}</h6></li>
                                 <li><hr class="dropdown-divider"></li>
                                 <li>
-                                    <a class="dropdown-item" href="#" onclick="logout()">
+                                    <a class="dropdown-item" href="{{ route('logout') }}" onclick="return confirm('Are you sure you want to logout?')" id="logout-link">
                                         <i class="fas fa-sign-out-alt me-2"></i>
                                         Logout
                                     </a>
@@ -642,20 +654,86 @@
         </div>
     </main>
 
-    <!-- Logout Form (Hidden) -->
-    <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
-        @csrf
-    </form>
+
 
     <!-- Bootstrap 5 JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     
     <script>
-        function logout() {
-            if (confirm('Are you sure you want to logout?')) {
-                document.getElementById('logout-form').submit();
+        // Auto-reload functionality
+        let lastModified = '{{ filemtime(resource_path("views/layouts/app.blade.php")) }}';
+        
+        // Check for updates every 10 seconds
+        setInterval(function() {
+            // Simple reload check
+            if (window.location.href.includes('users') || window.location.href.includes('courses')) {
+                location.reload();
             }
+        }, 10000);
+        
+        // Force reload on form submission
+        document.addEventListener('DOMContentLoaded', function() {
+            // Debug logout link
+            const logoutLink = document.getElementById('logout-link');
+            if (logoutLink) {
+                console.log('Logout link found:', logoutLink.href);
+                logoutLink.addEventListener('click', function(e) {
+                    console.log('Logout link clicked');
+                    if (!confirm('Are you sure you want to logout?')) {
+                        e.preventDefault();
+                        return false;
+                    }
+                    console.log('Proceeding with logout...');
+                });
+            } else {
+                console.error('Logout link not found!');
+            }
+            
+            const forms = document.querySelectorAll('form');
+            forms.forEach(form => {
+                form.addEventListener('submit', function() {
+                    // Add timestamp to prevent caching
+                    const timestamp = Date.now();
+                    if (form.method === 'GET') {
+                        const input = document.createElement('input');
+                        input.type = 'hidden';
+                        input.name = '_t';
+                        input.value = timestamp;
+                        form.appendChild(input);
+                    }
+                });
+            });
+            
+            // Add cache-busting to all links except logout
+            const links = document.querySelectorAll('a[href]');
+            links.forEach(link => {
+                if (link.href.includes(window.location.origin) && 
+                    !link.href.includes('logout') && 
+                    !link.href.includes('sign-out')) {
+                    link.addEventListener('click', function(e) {
+                        const url = new URL(this.href);
+                        url.searchParams.set('_t', Date.now());
+                        this.href = url.toString();
+                    });
+                }
+            });
+        });
+        
+
+        
+        // Clear cache on page load
+        if (performance.navigation.type === 1) {
+            // Page was reloaded
+            localStorage.clear();
+            sessionStorage.clear();
         }
+        
+        // Force reload on browser back/forward
+        window.addEventListener('pageshow', function(event) {
+            if (event.persisted) {
+                location.reload();
+            }
+        });
     </script>
 </body>
 </html> 
