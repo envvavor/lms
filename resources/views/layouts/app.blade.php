@@ -3,10 +3,6 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate, max-age=0">
-    <meta http-equiv="Pragma" content="no-cache">
-    <meta http-equiv="Expires" content="0">
-    <meta http-equiv="Last-Modified" content="{{ date('D, d M Y H:i:s') }} GMT">
     <title>@yield('title', 'LMS - Learning Management System')</title>
     
     <!-- Bootstrap 5 CSS -->
@@ -115,6 +111,7 @@
         .main-content {
             min-height: calc(100vh - 80px);
             padding: 2rem 0;
+            color: var(--text-primary);
         }
 
         .page-header {
@@ -124,6 +121,7 @@
             margin-bottom: 2rem;
             box-shadow: var(--shadow-sm);
             border: 1px solid var(--border-color);
+            color: var(--text-primary);
         }
 
         .page-title {
@@ -144,6 +142,7 @@
             box-shadow: var(--shadow-sm);
             transition: all 0.3s ease;
             overflow: hidden;
+            color: var(--text-primary);
         }
 
         .card:hover {
@@ -160,6 +159,7 @@
 
         .card-body {
             padding: 1.5rem;
+            color: var(--text-primary);
         }
 
         .btn {
@@ -222,6 +222,7 @@
             padding: 1rem;
             border-color: var(--border-color);
             vertical-align: middle;
+            color: var(--text-primary);
         }
 
         .badge {
@@ -241,6 +242,7 @@
             border: 1px solid var(--border-color);
             padding: 0.75rem 1rem;
             transition: all 0.3s ease;
+            color: var(--text-primary);
         }
 
         .form-control:focus, .form-select:focus {
@@ -270,6 +272,10 @@
 
         .breadcrumb-item.active {
             color: var(--text-secondary);
+        }
+
+        .breadcrumb {
+            color: var(--text-primary);
         }
 
         .stats-card {
@@ -329,6 +335,10 @@
 
         .content-text {
             line-height: 1.6;
+            color: var(--text-primary);
+        }
+
+        .post-content {
             color: var(--text-primary);
         }
 
@@ -551,8 +561,8 @@
     <nav class="navbar navbar-expand-lg">
         <div class="container">
             <a class="navbar-brand" href="{{ route('courses.index') }}">
-                <i class="fas fa-graduation-cap me-2"></i>
-                LMS Pro
+                <i class="fa-brands fa-google me-2"></i>
+                Creativy LMS
             </a>
 
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
@@ -568,14 +578,6 @@
                         </a>
                     </li>
                     @auth
-                        @if(Auth::user()->canCreateCourses())
-                        <li class="nav-item">
-                            <a class="nav-link {{ request()->routeIs('courses.create') ? 'active' : '' }}" href="{{ route('courses.create') }}">
-                                <i class="fas fa-plus me-1"></i>
-                                Create Course
-                            </a>
-                        </li>
-                        @endif
                         @if(Auth::user()->isAdmin())
                         <li class="nav-item">
                             <a class="nav-link {{ request()->routeIs('users.*') ? 'active' : '' }}" href="{{ route('users.index') }}">
@@ -603,8 +605,8 @@
                         </li>
                     @else
                         <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
-                                <div class="user-info">
+                            <a class="nav-link" href="#" role="button" data-bs-toggle="dropdown">
+                                <div class="user-info dropdown-toggle">
                                     <div class="user-avatar">
                                         {{ strtoupper(substr(Auth::user()->name, 0, 1)) }}
                                     </div>
@@ -618,7 +620,7 @@
                                 <li><h6 class="dropdown-header">{{ Auth::user()->name }}</h6></li>
                                 <li><hr class="dropdown-divider"></li>
                                 <li>
-                                    <a class="dropdown-item" href="{{ route('logout') }}" onclick="return confirm('Are you sure you want to logout?')" id="logout-link">
+                                    <a class="dropdown-item" href="{{ route('logout') }}" id="logout-link">
                                         <i class="fas fa-sign-out-alt me-2"></i>
                                         Logout
                                     </a>
@@ -660,78 +662,16 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     
     <script>
-        // Auto-reload functionality
-        let lastModified = '{{ filemtime(resource_path("views/layouts/app.blade.php")) }}';
-        
-        // Check for updates every 10 seconds
-        setInterval(function() {
-            // Simple reload check
-            if (window.location.href.includes('users') || window.location.href.includes('courses')) {
-                location.reload();
-            }
-        }, 10000);
-        
-        // Force reload on form submission
+        // Simple logout confirmation
         document.addEventListener('DOMContentLoaded', function() {
-            // Debug logout link
             const logoutLink = document.getElementById('logout-link');
             if (logoutLink) {
-                console.log('Logout link found:', logoutLink.href);
                 logoutLink.addEventListener('click', function(e) {
-                    console.log('Logout link clicked');
                     if (!confirm('Are you sure you want to logout?')) {
                         e.preventDefault();
                         return false;
                     }
-                    console.log('Proceeding with logout...');
                 });
-            } else {
-                console.error('Logout link not found!');
-            }
-            
-            const forms = document.querySelectorAll('form');
-            forms.forEach(form => {
-                form.addEventListener('submit', function() {
-                    // Add timestamp to prevent caching
-                    const timestamp = Date.now();
-                    if (form.method === 'GET') {
-                        const input = document.createElement('input');
-                        input.type = 'hidden';
-                        input.name = '_t';
-                        input.value = timestamp;
-                        form.appendChild(input);
-                    }
-                });
-            });
-            
-            // Add cache-busting to all links except logout
-            const links = document.querySelectorAll('a[href]');
-            links.forEach(link => {
-                if (link.href.includes(window.location.origin) && 
-                    !link.href.includes('logout') && 
-                    !link.href.includes('sign-out')) {
-                    link.addEventListener('click', function(e) {
-                        const url = new URL(this.href);
-                        url.searchParams.set('_t', Date.now());
-                        this.href = url.toString();
-                    });
-                }
-            });
-        });
-        
-
-        
-        // Clear cache on page load
-        if (performance.navigation.type === 1) {
-            // Page was reloaded
-            localStorage.clear();
-            sessionStorage.clear();
-        }
-        
-        // Force reload on browser back/forward
-        window.addEventListener('pageshow', function(event) {
-            if (event.persisted) {
-                location.reload();
             }
         });
     </script>

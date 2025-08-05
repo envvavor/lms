@@ -19,17 +19,9 @@ Route::middleware(['guest'])->group(function () {
 
 // Logout routes (accessible to authenticated users)
 Route::match(['GET', 'POST'], '/logout', function () {
-    \Log::info('Logout attempt from IP: ' . request()->ip());
-    
-    if (Auth::check()) {
-        \Log::info('User logged out: ' . Auth::user()->email);
-    }
-    
     Auth::logout();
     session()->invalidate();
     session()->regenerateToken();
-    
-    \Log::info('Logout completed, redirecting to login');
     
     return redirect()->route('login')->with('success', 'You have been successfully logged out.');
 })->name('logout');

@@ -6,7 +6,7 @@
 <div class="row justify-content-center">
     <div class="col-md-6 col-lg-5">
         <div class="card shadow-lg">
-            <div class="card-header text-center bg-primary text-white">
+            <div class="card-header text-center bg-primary text-black">
                 <h4 class="mb-0">
                     <i class="fas fa-sign-in-alt me-2"></i>
                     Welcome Back
@@ -14,13 +14,6 @@
                 <p class="mb-0 opacity-75">Sign in to your LMS Pro account</p>
             </div>
             <div class="card-body p-4">
-                @if(session('success'))
-                    <div class="alert alert-success alert-dismissible fade show" role="alert">
-                        <i class="fas fa-check-circle me-2"></i>
-                        {{ session('success') }}
-                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                    </div>
-                @endif
 
                 <form method="POST" action="{{ route('login') }}">
                     @csrf

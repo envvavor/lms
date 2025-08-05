@@ -91,7 +91,15 @@
                             <tr>
                                 <td>
                                     <div class="d-flex align-items-center">
-                                        <div class="user-avatar me-3">
+                                        @php
+                                            // Generate a color based on user id or name
+                                            $avatarColors = [
+                                                'bg-primary', 'bg-success', 'bg-danger', 'bg-warning', 'bg-info', 'bg-secondary'
+                                            ];
+                                            $colorIndex = $user->id % count($avatarColors);
+                                            $avatarBg = $avatarColors[$colorIndex];
+                                        @endphp
+                                        <div class="user-avatar me-3 {{ $avatarBg }} text-white rounded-circle d-flex align-items-center justify-content-center" style="width: 40px; height: 40px; font-size: 1.2rem; font-weight: 600;">
                                             {{ strtoupper(substr($user->name, 0, 1)) }}
                                         </div>
                                         <div>

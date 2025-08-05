@@ -6,7 +6,7 @@
 <div class="row justify-content-center">
     <div class="col-md-6 col-lg-5">
         <div class="card shadow-lg">
-            <div class="card-header text-center bg-primary text-white">
+            <div class="card-header text-center bg-primary text-black">
                 <h4 class="mb-0">
                     <i class="fas fa-user-plus me-2"></i>
                     Create Account
@@ -16,6 +16,9 @@
             <div class="card-body p-4">
                 <form method="POST" action="{{ route('register') }}">
                     @csrf
+
+                    <!-- Hidden role field with default value 'user' -->
+                    <input type="hidden" name="role" value="user">
 
                     <div class="mb-3">
                         <label for="name" class="form-label">
@@ -40,24 +43,6 @@
                         <input id="email" type="email" class="form-control @error('email') is-invalid @enderror" 
                                name="email" value="{{ old('email') }}" required autocomplete="email">
                         @error('email')
-                            <div class="invalid-feedback">
-                                <i class="fas fa-exclamation-circle me-1"></i>
-                                {{ $message }}
-                            </div>
-                        @enderror
-                    </div>
-
-                    <div class="mb-3">
-                        <label for="role" class="form-label">
-                            <i class="fas fa-user-tag me-1"></i>
-                            Role
-                        </label>
-                        <select id="role" class="form-select @error('role') is-invalid @enderror" name="role" required>
-                            <option value="">Select your role</option>
-                            <option value="user" {{ old('role') == 'user' ? 'selected' : '' }}>Student</option>
-                            <option value="teacher" {{ old('role') == 'teacher' ? 'selected' : '' }}>Teacher</option>
-                        </select>
-                        @error('role')
                             <div class="invalid-feedback">
                                 <i class="fas fa-exclamation-circle me-1"></i>
                                 {{ $message }}
@@ -113,27 +98,16 @@
             <div class="card-header">
                 <h6 class="mb-0">
                     <i class="fas fa-info-circle me-2"></i>
-                    Role Information
+                    Account Information
                 </h6>
             </div>
             <div class="card-body">
-                <div class="row">
-                    <div class="col-md-6">
-                        <div class="text-center mb-3">
-                            <div class="badge bg-info mb-2">Student</div>
-                            <p class="small text-muted mb-0">
-                                Enroll in courses and view posts
-                            </p>
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="text-center mb-3">
-                            <div class="badge bg-warning mb-2">Teacher</div>
-                            <p class="small text-muted mb-0">
-                                Create courses and manage content
-                            </p>
-                        </div>
-                    </div>
+                <div class="text-center">
+                    <div class="badge bg-info mb-2">Student Account</div>
+                    <p class="small text-muted mb-0">
+                        All new accounts are registered as Student by default.<br>
+                        Contact administrator for teacher privileges.
+                    </p>
                 </div>
             </div>
         </div>
