@@ -344,9 +344,6 @@
                 @endif
             @endauth
         </div>
-        <!-- Decorative elements -->
-        <div class="absolute top-4 right-4 w-24 h-24 bg-indigo-100 rounded-full opacity-50"></div>
-        <div class="absolute bottom-4 left-4 w-16 h-16 bg-purple-100 rounded-full opacity-30"></div>
     </div>
 @endif
 <!-- Pagination -->

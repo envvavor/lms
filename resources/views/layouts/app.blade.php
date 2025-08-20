@@ -601,7 +601,7 @@
                     <i class="fas fa-chevron-up dropdown-chevron" style="font-size: 0.8rem; opacity: 0.7;"></i>
                 </div>
                 <div class="user-dropdown-menu" id="userDropdownMenu">
-                    <a class="user-dropdown-item" href="#">
+                    <a class="user-dropdown-item" href="{{ route('profile.show') }}">
                         <i class="fas fa-user"></i>
                         <span>Profile</span>
                     </a>
