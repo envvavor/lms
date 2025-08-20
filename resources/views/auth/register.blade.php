@@ -3,111 +3,110 @@
 @section('title', 'Register - LMS Pro')
 
 @section('content')
-<div class="row justify-content-center">
-    <div class="col-md-6 col-lg-5">
-        <div class="card shadow-lg">
-            <div class="card-header text-center bg-primary text-black">
-                <h4 class="mb-0">
-                    <i class="fas fa-user-plus me-2"></i>
-                    Create Account
-                </h4>
-                <p class="mb-0 opacity-75">Join LMS Pro today</p>
+<script src="https://cdn.tailwindcss.com"></script>
+
+<div class="min-h-screen flex items-center justify-center bg-[#2b2738] p-4">
+    <div class="w-full max-w-5xl bg-[#1e1b29] rounded-2xl shadow-2xl overflow-hidden grid grid-cols-1 lg:grid-cols-2">
+        
+        <!-- Left Side (Image + Branding) -->
+        <div class="relative hidden lg:flex flex-col justify-between p-6 bg-gradient-to-b from-[#2b2738] to-[#1e1b29] h-full">
+            <div class="absolute inset-0 overflow-hidden rounded-xl">
+                <img 
+                    src="https://images.unsplash.com/photo-1519389950473-47ba0277781c?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" 
+                    alt="Background" 
+                    class="w-full h-full object-cover opacity-30"
+                >
             </div>
-            <div class="card-body p-4">
-                <form method="POST" action="{{ route('register') }}">
-                    @csrf
-
-                    <!-- Hidden role field with default value 'user' -->
-                    <input type="hidden" name="role" value="user">
-
-                    <div class="mb-3">
-                        <label for="name" class="form-label">
-                            <i class="fas fa-user me-1"></i>
-                            Full Name
-                        </label>
-                        <input id="name" type="text" class="form-control @error('name') is-invalid @enderror" 
-                               name="name" value="{{ old('name') }}" required autocomplete="name" autofocus>
-                        @error('name')
-                            <div class="invalid-feedback">
-                                <i class="fas fa-exclamation-circle me-1"></i>
-                                {{ $message }}
-                            </div>
-                        @enderror
-                    </div>
-
-                    <div class="mb-3">
-                        <label for="email" class="form-label">
-                            <i class="fas fa-envelope me-1"></i>
-                            Email Address
-                        </label>
-                        <input id="email" type="email" class="form-control @error('email') is-invalid @enderror" 
-                               name="email" value="{{ old('email') }}" required autocomplete="email">
-                        @error('email')
-                            <div class="invalid-feedback">
-                                <i class="fas fa-exclamation-circle me-1"></i>
-                                {{ $message }}
-                            </div>
-                        @enderror
-                    </div>
-
-                    <div class="mb-3">
-                        <label for="password" class="form-label">
-                            <i class="fas fa-lock me-1"></i>
-                            Password
-                        </label>
-                        <input id="password" type="password" class="form-control @error('password') is-invalid @enderror" 
-                               name="password" required autocomplete="new-password">
-                        @error('password')
-                            <div class="invalid-feedback">
-                                <i class="fas fa-exclamation-circle me-1"></i>
-                                {{ $message }}
-                            </div>
-                        @enderror
-                    </div>
-
-                    <div class="mb-3">
-                        <label for="password_confirmation" class="form-label">
-                            <i class="fas fa-lock me-1"></i>
-                            Confirm Password
-                        </label>
-                        <input id="password_confirmation" type="password" class="form-control" 
-                               name="password_confirmation" required autocomplete="new-password">
-                    </div>
-
-                    <div class="d-grid">
-                        <button type="submit" class="btn btn-primary btn-lg">
-                            <i class="fas fa-user-plus me-2"></i>
-                            Create Account
-                        </button>
-                    </div>
-
-                    <div class="text-center mt-3">
-                        <p class="text-muted mb-0">
-                            Already have an account? 
-                            <a href="{{ route('login') }}" class="text-decoration-none">
-                                <strong>Sign in here</strong>
-                            </a>
-                        </p>
-                    </div>
-                </form>
+            <div class="sidebar-header">
+                <a href="{{ route('courses.index') }}" class="sidebar-brand">
+                    <i class="fa-brands fa-google"></i>
+                    <span class="brand-text">Creativy LMS</span>
+                </a>
+            </div>
+            <div class="relative z-10"></div>
+            <div class="relative z-10 bottom-10 left-8 text-white">
+                <h2 class="text-2xl font-semibold">Join LMS Pro</h2>
+                <p class="text-gray-400 mt-1">Create an account to get started</p>
             </div>
         </div>
 
-        <!-- Role Information -->
-        <div class="card mt-4">
-            <div class="card-header">
-                <h6 class="mb-0">
-                    <i class="fas fa-info-circle me-2"></i>
-                    Account Information
-                </h6>
-            </div>
-            <div class="card-body">
-                <div class="text-center">
-                    <div class="badge bg-info mb-2">Student Account</div>
-                    <p class="small text-muted mb-0">
-                        All new accounts are registered as Student by default.<br>
-                        Contact administrator for teacher privileges.
-                    </p>
+        <!-- Right Side (Register Form) -->
+        <div class="flex items-center justify-center p-8">
+            <div class="w-full max-w-md space-y-6">
+                <h2 class="text-2xl font-bold text-white">Create your account</h2>
+                <p class="text-gray-400 text-sm">
+                    Already have an account? 
+                    <a href="{{ route('login') }}" class="text-indigo-400 hover:underline">Log in</a>
+                </p>
+
+                <form method="POST" action="{{ route('register') }}" class="space-y-4">
+                    @csrf
+
+                    <!-- Hidden role field -->
+                    <input type="hidden" name="role" value="user">
+
+                    <!-- Name -->
+                    <div>
+                        <input type="text" name="name" placeholder="Full Name" value="{{ old('name') }}" required
+                               class="w-full px-4 py-3 rounded-lg bg-[#2b2738] text-gray-200 placeholder-gray-500 border border-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                        @error('name')
+                            <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                        @enderror
+                    </div>
+
+                    <!-- Email -->
+                    <div>
+                        <input type="email" name="email" placeholder="Email" value="{{ old('email') }}" required
+                               class="w-full px-4 py-3 rounded-lg bg-[#2b2738] text-gray-200 placeholder-gray-500 border border-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                        @error('email')
+                            <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                        @enderror
+                    </div>
+
+                    <!-- Password -->
+                    <div>
+                        <input type="password" name="password" placeholder="Password" required
+                               class="w-full px-4 py-3 rounded-lg bg-[#2b2738] text-gray-200 placeholder-gray-500 border border-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                        @error('password')
+                            <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                        @enderror
+                    </div>
+
+                    <!-- Confirm Password -->
+                    <div>
+                        <input type="password" name="password_confirmation" placeholder="Confirm Password" required
+                               class="w-full px-4 py-3 rounded-lg bg-[#2b2738] text-gray-200 placeholder-gray-500 border border-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                        @error('password_confirmation')
+                            <p class="text-red-500 text-sm mt-1">{{ $message }}</p>
+                        @enderror
+                    </div>
+
+                    <!-- Submit Button -->
+                    <button type="submit"
+                            class="w-full py-3 bg-indigo-500 hover:bg-indigo-600 text-white font-semibold rounded-lg transition">
+                        Create Account
+                    </button>
+                </form>
+
+                <!-- Divider -->
+                <div class="flex items-center space-x-2">
+                    <hr class="flex-grow border-gray-700">
+                    <span class="text-gray-500 text-sm">Or sign up with</span>
+                    <hr class="flex-grow border-gray-700">
+                </div>
+
+                <!-- Social Buttons -->
+                <div class="flex space-x-3">
+                    <a href="#"
+                       class="flex items-center justify-center w-full py-3 bg-[#2b2738] text-white rounded-lg border border-gray-700 hover:bg-gray-700 transition">
+                        <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" class="w-5 h-5 mr-2"> Google
+                    </a>
+                </div>
+
+                <!-- Info Box -->
+                <div class="text-center text-gray-400 text-sm mt-4">
+                    <p class="mb-1">All new accounts are registered as <span class="text-indigo-400">Student</span> by default.</p>
+                    <p>Contact admin if you need teacher privileges.</p>
                 </div>
             </div>
         </div>

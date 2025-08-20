@@ -3,6 +3,7 @@
 @section('title', $course->name . ' - LMS Pro')
 
 @section('content')
+<div class="m-5">
 <!-- Page Header -->
 <div class="page-header">
     <div class="row align-items-center">
@@ -71,7 +72,7 @@
 </div>
 
 <!-- Course Content -->
-<div class="row">
+<div class="row mt-3">
     <div class="col-lg-8 col-md-12">
         <!-- Posts Section -->
         <div class="card">
@@ -265,5 +266,6 @@
             @endif
         @endauth
     </div>
+</div>
 </div>
 @endsection 

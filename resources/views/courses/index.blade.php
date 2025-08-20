@@ -3,24 +3,167 @@
 @section('title', 'Courses - LMS Pro')
 
 @section('content')
+
+<style>
+@keyframes slideUp {
+  from {
+    transform: translateY(50px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+.animate-slideUp {
+  animation: slideUp 0.6s ease-out forwards;
+}
+
+/* Accordion-style dropdown, integrated into card */
+.course-card .dropdown-menu {
+    position: static;
+    width: 100%;
+    overflow: hidden;
+    max-height: 0;
+    opacity: 0;
+    padding: 0;
+    transition: all 0.3s ease;
+    background: transparent; /* match card */
+    border: none;
+    box-shadow: none;
+}
+
+.course-card .dropdown-menu.show {
+    padding: 0.5rem 0;
+    max-height: 600px; /* enough to expand */
+    opacity: 1;
+}
+
+/* Course card specific dropdown styles */
+.course-dropdown-toggle {
+    cursor: pointer;
+}
+
+.course-dropdown-menu {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    min-width: 200px;
+    background: white;
+    border-radius: 0.5rem;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+    border: 1px solid #e2e8f0;
+    padding: 0.5rem 0;
+    margin-top: 0.5rem;
+    display: none;
+    z-index: 99999;
+}
+
+.course-dropdown-menu.show {
+    display: block;
+}
+
+/* Ensure proper positioning and visibility */
+.course-dropdown-menu {
+    position: absolute !important;
+    top: calc(100% + 0.5rem) !important;
+    right: 0 !important;
+    z-index: 99999 !important;
+    background: white !important;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2) !important;
+    border: 1px solid #e2e8f0 !important;
+}
+
+/* Ensure dropdown is not clipped by parent containers */
+.course-dropdown-menu {
+    overflow: visible !important;
+    clip: auto !important;
+    clip-path: none !important;
+}
+
+/* Force visibility and prevent clipping */
+.course-dropdown-menu.show {
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    z-index: 99999 !important;
+    pointer-events: auto !important;
+}
+
+/* Ensure parent containers don't clip the dropdown */
+.relative {
+    overflow: visible !important;
+}
+
+.group {
+    overflow: visible !important;
+}
+
+/* Ensure course card doesn't clip dropdown */
+.group.bg-gradient-to-br {
+    overflow: visible !important;
+}
+
+/* Force dropdown to break out of any clipping containers */
+.course-dropdown-menu {
+    position: absolute !important;
+    z-index: 99999 !important;
+    overflow: visible !important;
+    clip: auto !important;
+    clip-path: none !important;
+    transform: translate3d(0, 0, 0) !important;
+    will-change: transform !important;
+}
+
+/* Mobile responsive adjustments */
+@media (max-width: 768px) {
+    .course-dropdown-menu {
+        right: auto;
+        left: 0;
+        min-width: 180px;
+    }
+}
+
+.course-dropdown-item {
+    display: block;
+    padding: 0.75rem 1rem;
+    color: #374151;
+    text-decoration: none;
+    transition: all 0.2s ease;
+    border-radius: 0.25rem;
+    margin: 0 0.5rem;
+}
+
+.course-dropdown-item:hover {
+    background-color: #f3f4f6;
+    color: #111827;
+}
+
+.course-dropdown-item i {
+    width: 16px;
+    margin-right: 0.75rem;
+    text-align: center;
+}
+</style>
+
+<div class="m-3 sm:m-5 animate-slideUp"> 
+<script src="https://cdn.tailwindcss.com"></script>
 <!-- Page Header -->
-<div class="page-header">
-    <div class="row align-items-center">
-        <div class="col-md-8">
-            <h1 class="page-title">
-                <i class="fas fa-book-open me-2"></i>
+<div class="bg-white shadow-sm border-b border-gray-200 px-6 py-6 rounded-lg mb-6">
+    <div class="flex flex-col md:flex-row md:items-center md:justify-between">
+        <div>
+            <h1 class="text-2xl font-bold text-gray-800 flex items-center gap-2">
+                <i class="fas fa-book-open text-gray-800"></i>
                 Courses
             </h1>
-            <p class="page-subtitle">
-                Explore and manage your learning journey
-            </p>
+            <p class="text-gray-500 mt-1">Explore and manage your learning journey</p>
         </div>
-        <div class="col-md-4 text-md-end">
+        <div class="mt-4 md:mt-0">
             @auth
                 @if(Auth::user()->canCreateCourses())
-                    <a href="{{ route('courses.create') }}" class="btn btn-primary">
-                        <i class="fas fa-plus me-2"></i>
-                        Create New Course
+                    <a href="{{ route('courses.create') }}" 
+                       class="inline-flex items-center px-4 py-2 bg-[#2b2738] hover:bg-[#474354] text-white font-medium rounded-lg shadow-sm transition">
+                        <i class="fas fa-plus mr-2"></i> Create New Course
                     </a>
                 @endif
             @endauth
@@ -30,81 +173,85 @@
 
 <!-- Statistics Cards -->
 @auth
-<div class="row mb-4">
-    <div class="col-lg-3 col-md-6 col-sm-6 mb-3">
-        <div class="stats-card">
-            <div class="stats-number">{{ method_exists($courses, 'total') ? $courses->total() : $courses->count() }}</div>
-            <div class="stats-label">Total Courses</div>
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-6 over">
+    <div class="bg-[#2b2738] rounded-xl shadow p-6 text-center">
+        <div class="text-3xl font-bold text-white">
+            {{ method_exists($courses, 'total') ? $courses->total() : $courses->count() }}
         </div>
+        <p class="text-white text-sm">Total Courses</p>
     </div>
-    <div class="col-lg-3 col-md-6 col-sm-6 mb-3">
-        <div class="stats-card" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);">
-            <div class="stats-number">{{ Auth::user()->enrolledCourses()->count() }}</div>
-            <div class="stats-label">Enrolled Courses</div>
-        </div>
+
+    <div class="bg-[#2b2738] rounded-xl shadow p-6 text-center text-white">
+        <div class="text-3xl font-bold">{{ Auth::user()->enrolledCourses()->count() }}</div>
+        <p class="text-sm">Enrolled Courses</p>
     </div>
-    <div class="col-lg-3 col-md-6 col-sm-6 mb-3">
-        <div class="stats-card" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);">
-            <div class="stats-number">{{ Auth::user()->courses()->count() }}</div>
-            <div class="stats-label">My Courses</div>
-        </div>
+
+    <div class="bg-[#2b2738] rounded-xl shadow p-6 text-center text-white">
+        <div class="text-3xl font-bold">{{ Auth::user()->courses()->count() }}</div>
+        <p class="text-sm">My Courses</p>
     </div>
-    <div class="col-lg-3 col-md-6 col-sm-6 mb-3">
-        <div class="stats-card" style="background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);">
-            <div class="stats-number">{{ App\Models\Post::count() }}</div>
-            <div class="stats-label">Total Posts</div>
-        </div>
+
+    <div class="bg-[#2b2738] rounded-xl shadow p-6 text-center text-white">
+        <div class="text-3xl font-bold">{{ App\Models\Post::count() }}</div>
+        <p class="text-sm">Total Posts</p>
     </div>
 </div>
 @endauth
 
 <!-- Courses Grid -->
 @if($courses->count() > 0)
-    <div class="row">
+    <div class="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
         @foreach($courses as $course)
-            <div class="col-xl-4 col-lg-6 col-md-6 col-sm-12 mb-4">
-                <div class="card course-card h-100">
-                    <div class="card-header d-flex justify-content-between align-items-center">
-                        <div>
-                            <h5 class="card-title mb-0">
-                                <i class="fas fa-graduation-cap me-2 text-primary"></i>
+            <div class="group bg-gradient-to-br from-white to-gray-50 rounded-2xl shadow-lg hover:shadow-2xl transform hover:-translate-y-2 transition-all duration-300 flex flex-col border border-gray-100">
+                <!-- Card Header with Gradient Background -->
+                <div class="relative bg-gradient-to-br from-[#2b2738] to-[#2f2c3b] px-6 py-4 overflow-hidden rounded-2xl">
+                    <div class="flex justify-between items-start">
+                        <div class="flex-1">
+                            <h5 class="text-xl font-bold text-white mb-1 flex items-center gap-3">
+                                <div class="p-2 bg-white/20 rounded-lg backdrop-blur-sm">
+                                    <i class="fas fa-graduation-cap text-white"></i>
+                                </div>
                                 {{ $course->name }}
                             </h5>
+                            <div class="text-indigo-100 text-sm font-medium">
+                                <i class="fas fa-user mr-1"></i> {{ $course->user->name }}
+                            </div>
                         </div>
-                        <div class="dropdown">
-                            <button class="btn btn-sm btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown">
-                                <i class="fas fa-ellipsis-v"></i>
+                        <div class="relative">
+                            <button class="text-white/80 hover:text-white p-3 rounded-full hover:bg-white/20 transition-colors duration-200 course-dropdown-toggle" type="button">
+                                <i class="fas fa-ellipsis-h"></i>
                             </button>
-                            <ul class="dropdown-menu">
+
+                            <!-- Course dropdown menu -->
+                            <ul class="course-dropdown-menu">
                                 <li>
-                                    <a class="dropdown-item" href="{{ route('courses.show', $course) }}">
-                                        <i class="fas fa-eye me-2"></i>
-                                        View Course
+                                    <a class="course-dropdown-item" 
+                                    href="{{ route('courses.show', $course) }}">
+                                        <i class="fas fa-eye text-indigo-600"></i> View Course
                                     </a>
                                 </li>
                                 @auth
                                     @if(Auth::user()->canManageCourse($course))
                                         <li>
-                                            <a class="dropdown-item" href="{{ route('courses.edit', $course) }}">
-                                                <i class="fas fa-edit me-2"></i>
-                                                Edit Course
+                                            <a class="course-dropdown-item" 
+                                            href="{{ route('courses.edit', $course) }}">
+                                                <i class="fas fa-edit text-yellow-500"></i> Edit Course
                                             </a>
                                         </li>
                                         <li>
-                                            <a class="dropdown-item" href="{{ route('courses.enrollments', $course) }}">
-                                                <i class="fas fa-users me-2"></i>
-                                                Manage Enrollments
+                                            <a class="course-dropdown-item" 
+                                            href="{{ route('courses.enrollments', $course) }}">
+                                                <i class="fas fa-users text-green-500"></i> Manage Enrollments
                                             </a>
                                         </li>
-                                        <li><hr class="dropdown-divider"></li>
+                                        <li class="border-t border-gray-100 my-1"></li>
                                         <li>
-                                            <form action="{{ route('courses.destroy', $course) }}" method="POST" class="d-inline">
+                                            <form action="{{ route('courses.destroy', $course) }}" method="POST">
                                                 @csrf
                                                 @method('DELETE')
-                                                <button type="submit" class="dropdown-item text-danger" 
-                                                        onclick="return confirm('Are you sure you want to delete this course?')">
-                                                    <i class="fas fa-trash me-2"></i>
-                                                    Delete Course
+                                                <button type="submit" onclick="return confirm('Delete this course?')" 
+                                                        class="w-full text-left course-dropdown-item text-red-600 hover:bg-red-50">
+                                                    <i class="fas fa-trash"></i> Delete Course
                                                 </button>
                                             </form>
                                         </li>
@@ -113,95 +260,146 @@
                             </ul>
                         </div>
                     </div>
-                    
-                    <div class="card-body">
-                        <p class="card-text text-muted mb-3">
-                            {{ Str::limit($course->description, 120) }}
-                        </p>
-                        
-                        <div class="row mb-3">
-                            <div class="col-6">
-                                <small class="text-muted">
-                                    <i class="fas fa-user me-1"></i>
-                                    {{ $course->user->name }}
-                                </small>
-                            </div>
-                            <div class="col-6 text-end">
-                                <small class="text-muted">
-                                    <i class="fas fa-file-alt me-1"></i>
-                                    {{ $course->posts->count() }} posts
-                                </small>
+                </div>
+
+                <!-- Card Body -->
+                <div class="p-6 flex-1 flex flex-col">
+                    <p class="text-gray-600 mb-6 leading-relaxed line-clamp-3">{{ Str::limit($course->description, 120) }}</p>
+
+                    <!-- Stats Grid -->
+                    <div class="grid grid-cols-2 gap-4 mb-6">
+                        <div class="bg-gray-50 rounded-lg p-3 text-center border border-gray-100">
+                            <div class="text-2xl font-bold text-indigo-600">{{ $course->posts->count() }}</div>
+                            <div class="text-xs text-gray-500 font-medium">
+                                <i class="fas fa-file-alt mr-1"></i> Posts
                             </div>
                         </div>
-                        
-                        <div class="row mb-3">
-                            <div class="col-6">
-                                <small class="text-muted">
-                                    <i class="fas fa-users me-1"></i>
-                                    {{ $course->enrollments->count() }} students
-                                </small>
-                            </div>
-                            <div class="col-6 text-end">
-                                <small class="text-muted">
-                                    <i class="fas fa-calendar me-1"></i>
-                                    {{ $course->created_at->format('M d, Y') }}
-                                </small>
+                        <div class="bg-gray-50 rounded-lg p-3 text-center border border-gray-100">
+                            <div class="text-2xl font-bold text-green-600">{{ $course->enrollments->count() }}</div>
+                            <div class="text-xs text-gray-500 font-medium">
+                                <i class="fas fa-users mr-1"></i> Students
                             </div>
                         </div>
-                        
-                        <div class="d-flex justify-content-between align-items-center">
-                            <a href="{{ route('courses.show', $course) }}" class="btn btn-primary btn-sm">
-                                <i class="fas fa-eye me-1"></i>
-                                View Course
-                            </a>
-                            
-                            @auth
-                                @if(Auth::user()->isUser())
-                                    @if(Auth::user()->enrolledCourses()->where('course_id', $course->id)->exists())
-                                        <form action="{{ route('enrollments.unenroll', $course) }}" method="POST" class="d-inline">
-                                            @csrf
-                                            <button type="submit" class="btn btn-outline-danger btn-sm">
-                                                <i class="fas fa-user-times me-1"></i>
-                                                Unenroll
-                                            </button>
-                                        </form>
-                                    @else
-                                        <form action="{{ route('enrollments.enroll', $course) }}" method="POST" class="d-inline">
-                                            @csrf
-                                            <button type="submit" class="btn btn-success btn-sm">
-                                                <i class="fas fa-user-plus me-1"></i>
-                                                Enroll
-                                            </button>
-                                        </form>
-                                    @endif
+                    </div>
+
+                    <!-- Course Info -->
+                    <div class="mt-auto">
+                        <div class="flex items-center justify-between text-sm text-gray-500 bg-gray-50 rounded-lg px-3 py-2 border border-gray-100">
+                            <span class="flex items-center">
+                                <i class="fas fa-calendar mr-2 text-indigo-500"></i> 
+                                {{ $course->created_at->format('M d, Y') }}
+                            </span>
+                            <div class="w-2 h-2 bg-indigo-300 rounded-full"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card Footer -->
+                <div class="px-6 py-4 bg-gray-50/50 border-t border-gray-100">
+                    <div class="flex justify-between items-center gap-3">
+                        <a href="{{ route('courses.show', $course) }}" 
+                           class="flex-1 text-center px-4 py-2.5 text-sm bg-[#2b2738] hover:bg-[#33303d] text-white rounded-xl font-medium transition-all duration-200 transform hover:scale-105 shadow-lg hover:shadow-xl">
+                            <i class="fas fa-eye mr-2"></i> View Course
+                        </a>
+                        @auth
+                            @if(Auth::user()->isUser())
+                                @if(Auth::user()->enrolledCourses()->where('course_id', $course->id)->exists())
+                                    <form action="{{ route('enrollments.unenroll', $course) }}" method="POST" class="flex-1">
+                                        @csrf
+                                        <button type="submit" 
+                                                class="w-full px-4 py-2.5 text-sm border-2 border-red-200 text-red-600 rounded-xl hover:bg-red-50 hover:border-red-300 font-medium transition-all duration-200 transform hover:scale-105">
+                                            <i class="fas fa-user-times mr-2"></i> Unenroll
+                                        </button>
+                                    </form>
+                                @else
+                                    <form action="{{ route('enrollments.enroll', $course) }}" method="POST" class="flex-1">
+                                        @csrf
+                                        <button type="submit" 
+                                                class="w-full px-4 py-2.5 text-sm bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 text-white rounded-xl font-medium transition-all duration-200 transform hover:scale-105 shadow-lg hover:shadow-xl">
+                                            <i class="fas fa-user-plus mr-2"></i> Enroll Now
+                                        </button>
+                                    </form>
                                 @endif
-                            @endauth
-                        </div>
+                            @endif
+                        @endauth
                     </div>
                 </div>
             </div>
         @endforeach
     </div>
 @else
-    <div class="empty-state">
-        <i class="fas fa-book-open"></i>
-        <h3>No Courses Available</h3>
-        <p class="text-muted">There are no courses available at the moment.</p>
-        @auth
-            @if(Auth::user()->canCreateCourses())
-                <a href="{{ route('courses.create') }}" class="btn btn-primary">
-                    <i class="fas fa-plus me-2"></i>
-                    Create Your First Course
-                </a>
-            @endif
-        @endauth
+    <div class="text-center py-20 bg-gradient-to-br from-white to-indigo-50 rounded-2xl shadow-lg mt-8 border border-indigo-100">
+        <div class="max-w-md mx-auto">
+            <div class="w-20 h-20 bg-gradient-to-br from-indigo-100 to-purple-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                <i class="fas fa-book-open text-3xl text-indigo-600"></i>
+            </div>
+            <h3 class="text-2xl font-bold text-gray-800 mb-2">No Courses Available</h3>
+            <p class="text-gray-600 mb-8 leading-relaxed">There are no courses available at the moment.<br>Be the first to create one!</p>
+            @auth
+                @if(Auth::user()->canCreateCourses())
+                    <a href="{{ route('courses.create') }}" 
+                       class="inline-flex items-center px-6 py-3 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white font-semibold rounded-xl transition-all duration-200 transform hover:scale-105 shadow-lg hover:shadow-xl">
+                        <i class="fas fa-plus mr-3"></i> Create Your First Course
+                    </a>
+                @endif
+            @endauth
+        </div>
+        <!-- Decorative elements -->
+        <div class="absolute top-4 right-4 w-24 h-24 bg-indigo-100 rounded-full opacity-50"></div>
+        <div class="absolute bottom-4 left-4 w-16 h-16 bg-purple-100 rounded-full opacity-30"></div>
     </div>
 @endif
-
 <!-- Pagination -->
 @if(method_exists($courses, 'hasPages') && $courses->hasPages())
-    <div class="d-flex justify-content-center mt-4">
+    <div class="mt-6 flex justify-center">
         {{ $courses->links() }}
     </div>
 @endif
-@endsection 
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const toggles = document.querySelectorAll('.course-dropdown-toggle');
+
+    toggles.forEach(toggle => {
+        toggle.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+
+            const menu = this.closest('.relative').querySelector('.course-dropdown-menu');
+
+            // Close all other dropdowns first
+            document.querySelectorAll('.course-dropdown-menu').forEach(m => {
+                if (m !== menu) {
+                    m.classList.remove('show');
+                }
+            });
+
+            // Toggle this dropdown
+            if (menu) {
+                menu.classList.toggle('show');
+            }
+        });
+    });
+
+    // Close dropdowns when clicking outside
+    document.addEventListener('click', function(e) {
+        if (!e.target.closest('.course-dropdown-toggle') && !e.target.closest('.course-dropdown-menu')) {
+            document.querySelectorAll('.course-dropdown-menu').forEach(menu => {
+                menu.classList.remove('show');
+            });
+        }
+    });
+
+    // Close dropdowns when pressing Escape key
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') {
+            document.querySelectorAll('.course-dropdown-menu').forEach(menu => {
+                menu.classList.remove('show');
+            });
+        }
+    });
+});
+</script>
+
+</div>
+@endsection

@@ -3,6 +3,7 @@
 @section('title', 'User Management - LMS Pro')
 
 @section('content')
+<div class="m-5">
 <!-- Page Header -->
 <div class="page-header">
     <div class="row align-items-center">
@@ -199,6 +200,7 @@
     </div>
 @endif
 @endsection
+</div>
 
 <style>
     .user-avatar {
