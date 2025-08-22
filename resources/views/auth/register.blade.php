@@ -12,14 +12,14 @@
         <div class="relative hidden lg:flex flex-col justify-between p-6 bg-gradient-to-b from-[#2b2738] to-[#1e1b29] h-full">
             <div class="absolute inset-0 overflow-hidden rounded-xl">
                 <img 
-                    src="https://images.unsplash.com/photo-1519389950473-47ba0277781c?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" 
+                    src="https://images.unsplash.com/photo-1588702547923-7093a6c3ba33?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" 
                     alt="Background" 
                     class="w-full h-full object-cover opacity-30"
                 >
             </div>
-            <div class="sidebar-header">
-                <a href="{{ route('courses.index') }}" class="sidebar-brand">
-                    <i class="fa-brands fa-google"></i>
+            <div class="sidebar-header relative z-10">
+                <a href="#" class="sidebar-brand text-white font-bold text-xl flex items-center space-x-2">
+                    <img src="{{ asset('logo-web.png') }}" alt="" class="h-8 w-auto">
                     <span class="brand-text">Creativy LMS</span>
                 </a>
             </div>
@@ -103,11 +103,11 @@
                     </a>
                 </div>
 
-                <!-- Info Box -->
+                <!-- Info Box
                 <div class="text-center text-gray-400 text-sm mt-4">
                     <p class="mb-1">All new accounts are registered as <span class="text-indigo-400">Student</span> by default.</p>
                     <p>Contact admin if you need teacher privileges.</p>
-                </div>
+                </div> -->
             </div>
         </div>
     </div>

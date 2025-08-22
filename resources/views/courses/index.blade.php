@@ -241,7 +241,7 @@
                                         <li>
                                             <a class="course-dropdown-item" 
                                             href="{{ route('courses.enrollments', $course) }}">
-                                                <i class="fas fa-users text-green-500"></i> Manage Enrollments
+                                                <i class="fas fa-users text-green-500"></i> Enrollments
                                             </a>
                                         </li>
                                         <li class="border-t border-gray-100 my-1"></li>
@@ -251,7 +251,7 @@
                                                 @method('DELETE')
                                                 <button type="submit" onclick="return confirm('Delete this course?')" 
                                                         class="w-full text-left course-dropdown-item text-red-600 hover:bg-red-50">
-                                                    <i class="fas fa-trash"></i> Delete Course
+                                                    <i class="fas fa-trash text-red-600"></i> Delete Course
                                                 </button>
                                             </form>
                                         </li>
@@ -333,10 +333,17 @@
             <div class="w-20 h-20 bg-gradient-to-br from-indigo-100 to-purple-100 rounded-full flex items-center justify-center mx-auto mb-6">
                 <i class="fas fa-book-open text-3xl text-indigo-600"></i>
             </div>
-            <h3 class="text-2xl font-bold text-gray-800 mb-2">No Courses Available</h3>
-            <p class="text-gray-600 mb-8 leading-relaxed">There are no courses available at the moment.<br>Be the first to create one!</p>
             @auth
-                @if(Auth::user()->canCreateCourses())
+                @if(Auth::user()->isUser())
+                    <h3 class="text-2xl font-bold text-gray-800 mb-2">You Havent Joined Any Courses</h3>
+                    <p class="text-gray-600 mb-8 leading-relaxed">Search Courses List If You Want To Join Any Courses</p>
+                    <a href="#" 
+                       class="inline-flex items-center px-6 py-3 bg-[#2b2738] hover:bg-indigo-700 text-white font-semibold rounded-xl transition-all duration-200 transform hover:scale-105 shadow-lg hover:shadow-xl">
+                        <i class="fas fa-eye mr-3"></i> Search Courses List
+                    </a>
+                @elseif(Auth::user()->canCreateCourses())
+                    <h3 class="text-2xl font-bold text-gray-800 mb-2">No Courses Created Yet</h3>
+                    <p class="text-gray-600 mb-8 leading-relaxed">You haven't created any courses yet.<br>Start by creating your first course!</p>
                     <a href="{{ route('courses.create') }}" 
                        class="inline-flex items-center px-6 py-3 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 text-white font-semibold rounded-xl transition-all duration-200 transform hover:scale-105 shadow-lg hover:shadow-xl">
                         <i class="fas fa-plus mr-3"></i> Create Your First Course

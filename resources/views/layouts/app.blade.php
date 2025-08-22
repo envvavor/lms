@@ -11,6 +11,10 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
+    <!-- favicon -->
+    <link rel="icon" href="{{ asset('logo-web.png') }}" type="image/x-icon"> 
+
 
     <script>
         // Immediately apply sidebar state to prevent flash
@@ -547,8 +551,8 @@
         <!-- Sidebar Header -->
         <div class="sidebar-header">
             <a href="{{ route('courses.index') }}" class="sidebar-brand">
-                <i class="fa-brands fa-google"></i>
-                <span class="brand-text">Creativy LMS</span>
+                <img src="{{ asset('logo-web.png') }}" alt="" style="height: 30px; width: auto; max-width: 100%;">
+                <span class="brand-text">Creativy</span>
             </a>
         </div>
 

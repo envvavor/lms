@@ -13,17 +13,28 @@ class UserController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        // Only admin can access user management
-        if (!Auth::user()->isAdmin()) {
-            return redirect()->route('courses.index')
-                ->with('error', 'You do not have permission to access user management.');
+        $query = User::query();
+
+        if ($request->filled('search')) {
+            $query->where(function($q) use ($request) {
+                $q->where('name', 'like', "%{$request->search}%")
+                ->orWhere('email', 'like', "%{$request->search}%")
+                ->orWhere('role', 'like', "%{$request->search}%")
+                ->orWhere('created_at', 'like', "%{$request->search}%");
+            });
         }
 
-        $users = User::with(['courses', 'enrollments'])->paginate(15);
+        if ($request->filled('role')) {
+            $query->where('role', $request->role);
+        }
+
+        $users = $query->with(['courses', 'enrollments'])->paginate(10);
+
         return view('users.index', compact('users'));
     }
+
 
     /**
      * Show the form for creating a new resource.

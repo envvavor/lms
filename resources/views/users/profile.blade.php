@@ -1,84 +1,106 @@
 @extends('layouts.app')
 
-@section('title', 'My Profile')
+@section('title', $user->name . ' - User Details')
 
 @section('content')
-<div class="container py-5">
-    <div class="row justify-content-center">
-        <div class="col-md-8">
-
-            <!-- Profile Card -->
-            <div class="card shadow-lg border-0 rounded-3 bg-[#1e1b29]">
-                <div class="card-header bg-[#1e1b29] text-black d-flex align-items-center justify-content-between">
-                    <h4 class="mb-0 text">
-                        <i class="fas fa-user-circle me-2"></i> My Profile
-                    </h4>
+<div class="m-3 sm:m-5">
+    <div class="row">
+        <!-- Left Column -->
+        <div class="col-lg-8 mb-4">
+            <!-- User Info Card -->
+            <div class="card border-0 shadow-lg mb-4">
+                <div class="card-header text-white fw-bold" style="background:#2b2738;">
+                    <i class="fas fa-id-card me-2"></i> User Information
                 </div>
-
-                <div class="card-body p-4">
-                    <!-- User Info -->
-                    <div class="text-center mb-4">
-                        <div class="user-avatar" style="width: 80px; height: 80px; border-radius: 50%; background: #1e1b29; color: #fff; display: flex; align-items: center; justify-content: center; font-size: 2.5rem; margin: 0 auto;">
-                            @if(Auth::check() && Auth::user()->name)
-                                {{ strtoupper(substr(Auth::user()->name, 0, 1)) }}
-                            @else
-                                <i class="fas fa-user"></i>
-                            @endif
-                        </div>
-                        <h3 class="mt-3 mb-0">{{ $user->name }}</h3>
-                        @auth
-                            @if (Auth::user()->isAdmin())
-                                <span class="badge bg-danger text-capitalize">{{ Auth::user()->role }}</span>
-                            @elseif (Auth::user()->isUser())
-                                <span class="badge bg-primary text-capitalize">{{ Auth::user()->role }}</span>
-                            @elseif (Auth::user()->isTeacher())
-                                <span class="badge bg-warning text-capitalize">{{ Auth::user()->role }}</span>
-                            @endif
-                        @endauth
-                    </div>
-
-                    <hr>
-
-                    <div class="row mb-3">
-                        <div class="col-md-6">
-                            <p class="mb-1 text-muted"><i class="fas fa-envelope me-2"></i>Email</p>
-                            <h6>{{ $user->email }}</h6>
-                        </div>
-                        <div class="col-md-6">
-                            <p class="mb-1 text-muted"><i class="fas fa-check-circle me-2"></i>Email Verified</p>
-                            <h6>
-                                @if($user->email_verified_at)
-                                    <span class="text-success">{{ $user->email_verified_at->format('M d, Y H:i') }}</span>
-                                @else
-                                    <span class="text-danger">Not Verified</span>
-                                @endif
-                            </h6>
-                        </div>
-                    </div>
-
-                    <div class="row mb-3">
-                        <div class="col-md-6">
-                            <p class="mb-1 text-muted"><i class="fas fa-calendar-plus me-2"></i>Joined</p>
-                            <h6>{{ $user->created_at->format('M d, Y') }}</h6>
-                        </div>
-                        <div class="col-md-6">
-                            <p class="mb-1 text-muted"><i class="fas fa-sync-alt me-2"></i>Last Updated</p>
-                            <h6>{{ $user->updated_at->format('M d, Y') }}</h6>
-                        </div>
-                    </div>
-
-                    @if($user->google_id)
-                        <div class="mb-3">
-                            <p class="mb-1 text-muted"><i class="fab fa-google me-2"></i>Google Account</p>
-                            <h6>{{ $user->google_id }}</h6>
-                        </div>
-                    @endif
-
-
+                <div class="card-body">
+                    <p><strong>Email:</strong> {{ $user->email }}</p>
+                    <p><strong>Role:</strong>
+                        <span class="badge px-3 py-2 rounded-pill text-white" style="background:
+                            {{ $user->role === 'admin' ? '#e63946' : ($user->role === 'teacher' ? '#ffb703' : '#219ebc') }};
+                        ">
+                            {{ ucfirst($user->role) }}
+                        </span>
+                    </p>
+                    <p><strong>Joined:</strong> {{ $user->created_at->format('M d, Y') }}</p>
                 </div>
             </div>
-            <!-- End Profile Card -->
 
+            <!-- Courses Created -->
+            @if($user->courses->count() > 0)
+            <div class="card border-0 shadow-lg mb-4">
+                <div class="card-header text-white fw-bold" style="background:#2b2738;">
+                    <i class="fas fa-book me-2"></i> Courses Created
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        @foreach($user->courses as $course)
+                        <div class="col-md-6 mb-3">
+                            <div class="card h-100 border-0 shadow-sm hover-shadow">
+                                <div class="card-body">
+                                    <h6 class="fw-bold text-dark">
+                                        <i class="fas fa-graduation-cap text-primary me-1"></i> {{ $course->name }}
+                                    </h6>
+                                    <p class="text-muted small">{{ Str::limit($course->description, 80) }}</p>
+                                    <span class="badge bg-success mb-2">{{ $course->enrollments->count() }} students</span>
+                                    <br>
+                                    <a href="{{ route('courses.show', $course) }}" class="btn btn-sm text-white" style="background:#2b2738;">
+                                        <i class="fas fa-eye me-1"></i> View
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        @endforeach
+                    </div>
+                </div>
+            </div>
+            @endif
+
+            <!-- Enrolled Courses -->
+            @if($user->enrolledCourses->count() > 0)
+            <div class="card border-0 shadow-lg mb-4">
+                <div class="card-header text-white fw-bold" style="background:#2b2738;">
+                    <i class="fas fa-chalkboard-teacher me-2"></i> Enrolled Courses
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        @foreach($user->enrolledCourses as $course)
+                        <div class="col-md-6 mb-3">
+                            <div class="card h-100 border-0 shadow-sm hover-shadow">
+                                <div class="card-body">
+                                    <h6 class="fw-bold text-dark">
+                                        <i class="fas fa-graduation-cap text-primary me-1"></i> {{ $course->name }}
+                                    </h6>
+                                    <p class="text-muted small">{{ Str::limit($course->description, 80) }}</p>
+                                    <span class="badge bg-secondary mb-2">By {{ $course->user->name }}</span>
+                                    <br>
+                                    <a href="{{ route('courses.show', $course) }}" class="btn btn-sm text-white" style="background:#2b2738;">
+                                        <i class="fas fa-eye me-1"></i> View
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        @endforeach
+                    </div>
+                </div>
+            </div>
+            @endif
+        </div>
+
+        <!-- Right Column -->
+        <div class="col-lg-4">
+            <div class="card border-0 shadow-lg">
+                <div class="card-body text-center">
+                    <div class="rounded-circle d-flex align-items-center justify-content-center mx-auto mb-3 shadow"
+                        style="width:90px;height:90px;font-size:2rem;background:#2b2738;color:#fff;">
+                        {{ strtoupper(substr($user->name, 0, 1)) }}
+                    </div>
+                    <h5 class="fw-bold">{{ $user->name }}</h5>
+                    <p class="text-muted">{{ $user->email }}</p>
+                    <span class="badge text-white px-3 py-2" style="background:#2b2738;">
+                        {{ ucfirst($user->role) }}
+                    </span>
+                </div>
+            </div>
         </div>
     </div>
 </div>
