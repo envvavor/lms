@@ -3,64 +3,64 @@
 @section('title', $post->title . ' - ' . $post->course->name)
 
 @section('content')
-<!-- Page Header -->
-<div class="page-header">
+<script src="https://cdn.tailwindcss.com"></script>
+<div class="m-3 sm:m-5">
+<div class="page-header mb-5">
     <div class="row align-items-center">
         <div class="col-lg-8 col-md-12">
-            <nav aria-label="breadcrumb">
+            <!-- Breadcrumb -->
+            <nav aria-label="breadcrumb" class="mb-3">
                 <ol class="breadcrumb">
                     <li class="breadcrumb-item">
-                        <a href="{{ route('courses.index') }}" class="text-decoration-none">
-                            <i class="fas fa-home me-1"></i>
-                            Courses
+                        <a href="{{ route('courses.index') }}" class="text-decoration-none text-dark">
+                            <i class="fas fa-home me-1"></i> Courses
                         </a>
                     </li>
                     <li class="breadcrumb-item">
-                        <a href="{{ route('courses.show', $post->course) }}" class="text-decoration-none">
+                        <a href="{{ route('courses.show', $post->course) }}" class="text-decoration-none text-dark">
                             {{ $post->course->name }}
                         </a>
                     </li>
-                    <li class="breadcrumb-item active" aria-current="page">
+                    <li class="breadcrumb-item active text-dark" aria-current="page">
                         {{ $post->title }}
                     </li>
                 </ol>
             </nav>
-            
-            <h1 class="page-title">
-                <i class="fas fa-{{ $post->type === 'text' ? 'file-text' : ($post->type === 'image' ? 'image' : ($post->type === 'video' ? 'video' : 'file')) }} me-2"></i>
+
+            <!-- Title -->
+            <h1 class="page-title fw-bold text-dark mb-2">
+                <i class="fas fa-{{ $post->type === 'text' ? 'file-alt' : ($post->type === 'image' ? 'image' : ($post->type === 'video' ? 'video' : 'paperclip')) }} me-2 text-primary"></i>
                 {{ $post->title }}
             </h1>
-            
-            <div class="d-flex flex-wrap align-items-center gap-2 gap-md-3">
-                <span class="badge bg-{{ $post->type === 'text' ? 'primary' : ($post->type === 'image' ? 'success' : ($post->type === 'video' ? 'warning' : 'info')) }}">
-                    <i class="fas fa-{{ $post->type === 'text' ? 'file-text' : ($post->type === 'image' ? 'image' : ($post->type === 'video' ? 'video' : 'file')) }} me-1"></i>
+
+            <!-- Meta -->
+            <div class="d-flex flex-wrap align-items-center gap-2">
+                <span class="badge rounded-pill" style="background:#2b2738; color:#fff;">
                     {{ ucfirst($post->type) }}
                 </span>
-                <span class="badge bg-secondary">
-                    <i class="fas fa-user me-1"></i>
-                    {{ $post->user->name }}
+                <span class="badge bg-light text-dark border">
+                    <i class="fas fa-user me-1"></i> {{ $post->user->name }}
                 </span>
-                <span class="badge bg-info">
-                    <i class="fas fa-calendar me-1"></i>
-                    {{ $post->created_at->format('M d, Y H:i') }}
+                <span class="badge bg-light text-dark border">
+                    <i class="fas fa-calendar me-1"></i> {{ $post->created_at->format('M d, Y H:i') }}
                 </span>
             </div>
         </div>
+
+        <!-- Action buttons -->
         <div class="col-lg-4 col-md-12 text-lg-end text-md-start mt-3 mt-lg-0">
             @auth
                 @if(Auth::user()->canManageCourse($post->course))
                     <div class="btn-group" role="group">
-                        <a href="{{ route('posts.edit', $post) }}" class="btn btn-outline-primary">
-                            <i class="fas fa-edit me-2"></i>
-                            Edit Post
+                        <a href="{{ route('posts.edit', $post) }}" class="btn">
+                            <i class="fas fa-edit me-2"></i>Edit
                         </a>
                         <form action="{{ route('posts.destroy', $post) }}" method="POST" class="d-inline">
                             @csrf
                             @method('DELETE')
-                            <button type="submit" class="btn btn-outline-danger" 
+                            <button type="submit" class="btn btn-outline-danger"
                                     onclick="return confirm('Are you sure you want to delete this post?')">
-                                <i class="fas fa-trash me-2"></i>
-                                Delete
+                                <i class="fas fa-trash me-2"></i>Delete
                             </button>
                         </form>
                     </div>
@@ -73,192 +73,105 @@
 <!-- Post Content -->
 <div class="row">
     <div class="col-lg-8 col-md-12">
-        <div class="card">
+        <div class="card shadow-sm border-0">
             <div class="card-body">
                 @if($post->content)
                     <div class="post-content mb-4">
-                        <h5 class="mb-3">
-                            <i class="fas fa-align-left me-2"></i>
-                            Content
+                        <h5 class="fw-bold mb-3 text-dark">
+                            <i class="fas fa-align-left me-2 text-primary"></i> Content
                         </h5>
-                        <div class="content-text">
+                        <div class="content-text text-dark">
                             {!! nl2br(e($post->content)) !!}
                         </div>
                     </div>
                 @endif
 
+                <!-- File Attachment -->
                 @if($post->file_path)
-                    <div class="file-content">
-                        <h5 class="mb-3">
-                            <i class="fas fa-{{ $post->type === 'image' ? 'image' : ($post->type === 'video' ? 'video' : 'file') }} me-2"></i>
-                            {{ $post->type === 'image' ? 'Image' : ($post->type === 'video' ? 'Video' : 'File') }}
-                        </h5>
+                    <div class="mb-3">
+                        @php
+                            $ext = strtolower(pathinfo($post->file_path, PATHINFO_EXTENSION));
+                        @endphp
+
+                        @if(in_array($ext, ['jpg','jpeg','png','gif','webp']))
+                            <img src="{{ asset('storage/' . $post->file_path) }}" 
+                                alt="Attachment"
+                                class="img-fluid rounded shadow"
+                                style="max-height:350px; object-fit:cover;">
                         
-                        @if($post->type === 'image')
-                            <div class="text-center">
-                                <img src="{{ Storage::url($post->file_path) }}" 
-                                     alt="{{ $post->title }}" 
-                                     class="img-fluid rounded shadow-sm" 
-                                     style="max-height: 500px;">
-                            </div>
-                        @elseif($post->type === 'video')
-                            <div class="text-center">
-                                <video controls class="w-100 rounded shadow-sm" style="max-height: 500px;">
-                                    <source src="{{ Storage::url($post->file_path) }}" type="video/mp4">
-                                    Your browser does not support the video tag.
-                                </video>
-                            </div>
+                        @elseif(in_array($ext, ['mp4','webm','ogg']))
+                            <video controls class="w-100 rounded shadow" style="max-height:350px;">
+                                <source src="{{ asset('storage/' . $post->file_path) }}" type="video/{{ $ext }}">
+                                Your browser does not support the video tag.
+                            </video>
+                        
+                        @elseif($ext === 'pdf')
+                            <iframe src="{{ asset('storage/' . $post->file_path) }}" 
+                                    class="w-100 rounded" style="height:400px;" frameborder="0"></iframe>
+                            <a href="{{ asset('storage/' . $post->file_path) }}" target="_blank" 
+                               class="btn btn-sm btn-dark mt-2">
+                                <i class="fas fa-external-link-alt me-1"></i> Open PDF
+                            </a>
+                        
                         @else
-                            <div class="file-preview">
-                                <div class="d-flex align-items-center p-4 bg-light rounded">
-                                    <div class="file-icon me-4">
-                                        <i class="fas fa-file-pdf fa-3x text-primary"></i>
-                                    </div>
-                                    <div class="flex-grow-1">
-                                        <h6 class="mb-1">{{ basename($post->file_path) }}</h6>
-                                        <p class="text-muted mb-2">File attachment</p>
-                                        <small class="text-muted">
-                                            <i class="fas fa-calendar me-1"></i>
-                                            Uploaded on {{ $post->created_at->format('M d, Y H:i') }}
-                                        </small>
-                                    </div>
-                                    <div class="ms-3">
-                                        <a href="{{ Storage::url($post->file_path) }}" 
-                                           class="btn btn-primary" 
-                                           target="_blank"
-                                           download>
-                                            <i class="fas fa-download me-2"></i>
-                                            Download
-                                        </a>
-                                    </div>
-                                </div>
-                            </div>
+                            <a href="{{ asset('storage/' . $post->file_path) }}" target="_blank"
+                               class="btn btn-outline-dark">
+                                <i class="fas fa-paperclip me-2"></i> Download Attachment
+                            </a>
                         @endif
                     </div>
                 @endif
             </div>
         </div>
     </div>
-    
+
+    <!-- Sidebar -->
     <div class="col-lg-4 col-md-12 mt-4 mt-lg-0">
-        <!-- Post Information -->
-        <div class="card mb-4">
-            <div class="card-header">
-                <h6 class="mb-0">
-                    <i class="fas fa-info-circle me-2"></i>
-                    Post Information
-                </h6>
+        <div class="card shadow-sm border-0 mb-4">
+            <div class="bg-[#2b2738] p-4 text-white fw-bold">
+                <i class="fas fa-info-circle me-2"></i> Post Information
             </div>
             <div class="card-body">
-                <div class="mb-3">
-                    <strong>Course:</strong><br>
-                    <a href="{{ route('courses.show', $post->course) }}" class="text-decoration-none">
+                <p><strong>Course:</strong> <br>
+                    <a href="{{ route('courses.show', $post->course) }}" class="text-dark fw-semibold">
                         {{ $post->course->name }}
                     </a>
-                </div>
-                <div class="mb-3">
-                    <strong>Author:</strong><br>
-                    <span class="text-muted">{{ $post->user->name }}</span>
-                </div>
-                <div class="mb-3">
-                    <strong>Created:</strong><br>
-                    <span class="text-muted">{{ $post->created_at->format('M d, Y H:i') }}</span>
-                </div>
-                <div class="mb-3">
-                    <strong>Last updated:</strong><br>
-                    <span class="text-muted">{{ $post->updated_at->format('M d, Y H:i') }}</span>
-                </div>
-                <div class="mb-3">
-                    <strong>Type:</strong><br>
-                    <span class="badge bg-{{ $post->type === 'text' ? 'primary' : ($post->type === 'image' ? 'success' : ($post->type === 'video' ? 'warning' : 'info')) }}">
-                        {{ ucfirst($post->type) }}
-                    </span>
-                </div>
+                </p>
+                <p><strong>Author:</strong><br><span class="text-muted">{{ $post->user->name }}</span></p>
+                <p><strong>Created:</strong><br><span class="text-muted">{{ $post->created_at->format('M d, Y H:i') }}</span></p>
+                <p><strong>Updated:</strong><br><span class="text-muted">{{ $post->updated_at->format('M d, Y H:i') }}</span></p>
                 @if($post->file_path)
-                    <div class="mb-3">
-                        <strong>File:</strong><br>
-                        <span class="text-muted">{{ basename($post->file_path) }}</span>
-                    </div>
+                    <p><strong>File:</strong><br><span class="text-muted">{{ basename($post->file_path) }}</span></p>
                 @endif
             </div>
         </div>
-        
-        <!-- Quick Actions -->
-        @auth
-            @if(Auth::user()->canManageCourse($post->course))
-                <div class="card">
-                    <div class="card-header">
-                        <h6 class="mb-0">
-                            <i class="fas fa-tools me-2"></i>
-                            Quick Actions
-                        </h6>
-                    </div>
-                    <div class="card-body">
-                        <div class="d-grid gap-2">
-                            <a href="{{ route('posts.edit', $post) }}" class="btn btn-outline-primary">
-                                <i class="fas fa-edit me-2"></i>
-                                Edit Post
-                            </a>
-                            <a href="{{ route('courses.show', $post->course) }}" class="btn btn-outline-secondary">
-                                <i class="fas fa-arrow-left me-2"></i>
-                                Back to Course
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            @else
-                <div class="card">
-                    <div class="card-header">
-                        <h6 class="mb-0">
-                            <i class="fas fa-arrow-left me-2"></i>
-                            Navigation
-                        </h6>
-                    </div>
-                    <div class="card-body">
-                        <div class="d-grid gap-2">
-                            <a href="{{ route('courses.show', $post->course) }}" class="btn btn-outline-primary">
-                                <i class="fas fa-arrow-left me-2"></i>
-                                Back to Course
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            @endif
-        @endauth
+
+        <div class="card shadow-sm border-0">
+            <div class="bg-[#2b2738] p-4 text-white fw-bold">
+                <i class="fas fa-arrow-left me-2"></i> Navigation
+            </div>
+            <div class="card-body">
+                <a href="{{ route('courses.show', $post->course) }}" class="btn btn-dark w-100">
+                    <i class="fas fa-arrow-left me-2"></i> Back to Course
+                </a>
+            </div>
+        </div>
     </div>
 </div>
-
+</div>
 <style>
+.page-title { color:#2b2738; }
 .post-content {
-    background: #f8f9fa;
+    background: #fff;
+    border: 1px solid #ddd;
     padding: 1.5rem;
     border-radius: 0.5rem;
-    border-left: 4px solid var(--primary-color);
+    border-left: 4px solid #2b2738;
 }
-
 .content-text {
     line-height: 1.6;
-    font-size: 1.1rem;
-}
-
-.file-preview {
-    background: white;
-    border: 1px solid var(--border-color);
-    border-radius: 0.5rem;
-}
-
-.breadcrumb {
-    background: transparent;
-    padding: 0;
-    margin-bottom: 1rem;
-}
-
-.breadcrumb-item a {
-    color: var(--primary-color);
-}
-
-.breadcrumb-item.active {
-    color: var(--text-secondary);
+    font-size: 1.05rem;
+    color:#2b2738;
 }
 </style>
-@endsection 
+@endsection

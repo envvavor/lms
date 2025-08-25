@@ -3,244 +3,146 @@
 @section('title', 'Create Post - ' . $course->name)
 
 @section('content')
-<!-- Page Header -->
-<div class="page-header">
-    <div class="row align-items-center">
-        <div class="col-lg-8 col-md-12">
-            <nav aria-label="breadcrumb">
-                <ol class="breadcrumb">
-                    <li class="breadcrumb-item">
-                        <a href="{{ route('courses.index') }}" class="text-decoration-none">
-                            <i class="fas fa-home me-1"></i>
-                            Courses
-                        </a>
-                    </li>
-                    <li class="breadcrumb-item">
-                        <a href="{{ route('courses.show', $course) }}" class="text-decoration-none">
-                            {{ $course->name }}
-                        </a>
-                    </li>
-                    <li class="breadcrumb-item active" aria-current="page">
-                        Create Post
-                    </li>
-                </ol>
-            </nav>
-            
-            <h1 class="page-title">
-                <i class="fas fa-plus me-2"></i>
+<script src="https://cdn.tailwindcss.com"></script>
+<div class="m-3 sm:m-5">
+
+    <!-- Breadcrumb -->
+    <nav class="flex text-sm text-gray-600 mb-6" aria-label="Breadcrumb">
+        <ol class="inline-flex items-center space-x-2">
+            <li>
+                <a href="{{ route('courses.index') }}" class="hover:text-blue-600 flex items-center">
+                    <i class="fas fa-home mr-1"></i> Courses
+                </a>
+            </li>
+            <li>
+                <span class="mx-1">/</span>
+                <a href="{{ route('courses.show', $course) }}" class="hover:text-blue-600">
+                    {{ $course->name }}
+                </a>
+            </li>
+            <li>
+                <span class="mx-1">/</span>
+                <span class="text-gray-400">Create Post</span>
+            </li>
+        </ol>
+    </nav>
+
+    <!-- Page Header -->
+    <div class="flex flex-col md:flex-row md:items-center md:justify-between mb-8">
+        <div>
+            <h1 class="text-2xl font-bold text-gray-800 flex items-center gap-2">
+                <i class="fas fa-plus text-blue-500"></i>
                 Create New Post
             </h1>
-            <p class="page-subtitle">
-                Add a new post to course: {{ $course->name }}
-            </p>
+            <p class="text-gray-500 mt-1">Add a new post to course: {{ $course->name }}</p>
         </div>
-        <div class="col-lg-4 col-md-12 text-lg-end text-md-start mt-3 mt-lg-0">
-            <a href="{{ route('courses.show', $course) }}" class="btn btn-outline-secondary">
-                <i class="fas fa-arrow-left me-2"></i>
-                Back to Course
-            </a>
-        </div>
+        <a href="{{ route('courses.show', $course) }}" 
+           class="mt-4 md:mt-0 inline-flex items-center px-4 py-2 border rounded-lg text-gray-700 border-gray-300 hover:bg-gray-100 transition">
+            <i class="fas fa-arrow-left mr-2"></i> Back to Course
+        </a>
     </div>
-</div>
 
-<!-- Create Form -->
-<div class="row">
-    <div class="col-lg-8 col-md-12">
-        <div class="card">
-            <div class="card-header">
-                <h5 class="mb-0">
-                    <i class="fas fa-plus me-2"></i>
-                    Post Details
-                </h5>
-            </div>
-            <div class="card-body">
-                <form action="{{ route('posts.store', $course) }}" method="POST" enctype="multipart/form-data">
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <!-- Form -->
+        <div class="lg:col-span-2">
+            <div class="bg-white shadow rounded-2xl p-6">
+                <h2 class="text-lg font-semibold text-gray-700 mb-4 flex items-center gap-2">
+                    <i class="fas fa-file-alt text-blue-500"></i> Post Details
+                </h2>
+
+                <form action="{{ route('posts.store', $course) }}" method="POST" enctype="multipart/form-data" class="space-y-5">
                     @csrf
-                    
-                    <div class="mb-3">
-                        <label for="title" class="form-label">
-                            <i class="fas fa-heading me-1"></i>
-                            Post Title
+
+                    <!-- Title -->
+                    <div>
+                        <label for="title" class="block text-sm font-medium text-gray-700 mb-1">
+                            <i class="fas fa-heading mr-1"></i> Post Title
                         </label>
-                        <input type="text" class="form-control @error('title') is-invalid @enderror" 
-                               id="title" name="title" value="{{ old('title') }}" required 
-                               placeholder="Enter post title...">
+                        <input type="text" id="title" name="title"
+                               class="w-full rounded-lg border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500 @error('title') border-red-500 @enderror"
+                               value="{{ old('title') }}" required placeholder="Enter post title...">
                         @error('title')
-                            <div class="invalid-feedback">
-                                <i class="fas fa-exclamation-circle me-1"></i>
-                                {{ $message }}
-                            </div>
+                            <p class="text-sm text-red-600 mt-1 flex items-center gap-1">
+                                <i class="fas fa-exclamation-circle"></i> {{ $message }}
+                            </p>
                         @enderror
                     </div>
 
-                    <div class="mb-3">
-                        <label for="type" class="form-label">
-                            <i class="fas fa-tag me-1"></i>
-                            Post Type
+                    <!-- Content -->
+                    <div>
+                        <label for="content" class="block text-sm font-medium text-gray-700 mb-1">
+                            <i class="fas fa-align-left mr-1"></i> Content (optional)
                         </label>
-                        <select class="form-select @error('type') is-invalid @enderror" id="type" name="type" required>
-                            <option value="">Select post type</option>
-                            <option value="text" {{ old('type') == 'text' ? 'selected' : '' }}>Text</option>
-                            <option value="image" {{ old('type') == 'image' ? 'selected' : '' }}>Image</option>
-                            <option value="file" {{ old('type') == 'file' ? 'selected' : '' }}>File</option>
-                            <option value="video" {{ old('type') == 'video' ? 'selected' : '' }}>Video</option>
-                        </select>
-                        @error('type')
-                            <div class="invalid-feedback">
-                                <i class="fas fa-exclamation-circle me-1"></i>
-                                {{ $message }}
-                            </div>
-                        @enderror
-                    </div>
-
-                    <div class="mb-3">
-                        <label for="content" class="form-label">
-                            <i class="fas fa-align-left me-1"></i>
-                            Content
-                        </label>
-                        <textarea class="form-control @error('content') is-invalid @enderror" 
-                                  id="content" name="content" rows="6" 
-                                  placeholder="Enter post content...">{{ old('content') }}</textarea>
+                        <textarea id="content" name="content" rows="6"
+                                  class="w-full rounded-lg border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500 @error('content') border-red-500 @enderror"
+                                  placeholder="Write something...">{{ old('content') }}</textarea>
                         @error('content')
-                            <div class="invalid-feedback">
-                                <i class="fas fa-exclamation-circle me-1"></i>
-                                {{ $message }}
-                            </div>
+                            <p class="text-sm text-red-600 mt-1 flex items-center gap-1">
+                                <i class="fas fa-exclamation-circle"></i> {{ $message }}
+                            </p>
                         @enderror
                     </div>
 
-                    <div class="mb-3">
-                        <label for="file" class="form-label">
-                            <i class="fas fa-file-upload me-1"></i>
-                            File (Optional)
+                    <!-- File -->
+                    <div>
+                        <label for="file" class="block text-sm font-medium text-gray-700 mb-1">
+                            <i class="fas fa-file-upload mr-1"></i> File (optional)
                         </label>
-                        <input type="file" class="form-control @error('file') is-invalid @enderror" 
-                               id="file" name="file">
+                        <input type="file" id="file" name="file"
+                               class="w-full text-gray-700 file:mr-4 file:py-2 file:px-4 
+                                      file:rounded-lg file:border-0 
+                                      file:text-sm file:font-semibold
+                                      file:bg-blue-50 file:text-blue-600
+                                      hover:file:bg-blue-100 
+                                      @error('file') border-red-500 @enderror">
                         @error('file')
-                            <div class="invalid-feedback">
-                                <i class="fas fa-exclamation-circle me-1"></i>
-                                {{ $message }}
-                            </div>
+                            <p class="text-sm text-red-600 mt-1 flex items-center gap-1">
+                                <i class="fas fa-exclamation-circle"></i> {{ $message }}
+                            </p>
                         @enderror
-                        <div class="form-text">
-                            <i class="fas fa-info-circle me-1"></i>
-                            Upload a file to accompany your post. Supported formats: images, videos, documents.
-                        </div>
+                        <p class="text-sm text-gray-500 mt-1">
+                            <i class="fas fa-info-circle mr-1"></i> Supported formats: images, videos, documents.
+                        </p>
                     </div>
 
-                    <div class="d-flex justify-content-between">
-                        <a href="{{ route('courses.show', $course) }}" class="btn btn-outline-secondary">
-                            <i class="fas fa-times me-2"></i>
-                            Cancel
+                    <!-- Actions -->
+                    <div class="flex justify-between items-center pt-4">
+                        <a href="{{ route('courses.show', $course) }}" 
+                           class="inline-flex items-center px-4 py-2 border rounded-lg text-gray-700 border-gray-300 hover:bg-gray-100 transition">
+                            <i class="fas fa-times mr-2"></i> Cancel
                         </a>
-                        <button type="submit" class="btn btn-primary">
-                            <i class="fas fa-save me-2"></i>
-                            Create Post
+                        <button type="submit"
+                                class="inline-flex items-center px-5 py-2 bg-blue-600 text-white font-medium rounded-lg shadow hover:bg-blue-700 transition">
+                            <i class="fas fa-save mr-2"></i> Create Post
                         </button>
                     </div>
                 </form>
             </div>
         </div>
-    </div>
-    
-    <div class="col-lg-4 col-md-12 mt-4 mt-lg-0">
-        <!-- Course Info -->
-        <div class="card mb-4">
-            <div class="card-header">
-                <h6 class="mb-0">
-                    <i class="fas fa-info-circle me-2"></i>
-                    Course Information
-                </h6>
+
+        <!-- Sidebar -->
+        <div class="space-y-6">
+            <!-- Course Info -->
+            <div class="bg-white shadow rounded-2xl p-5">
+                <h3 class="text-md font-semibold text-gray-700 mb-3 flex items-center gap-2">
+                    <i class="fas fa-info-circle text-blue-500"></i> Course Information
+                </h3>
+                <p><strong>Course:</strong> <span class="text-gray-600">{{ $course->name }}</span></p>
+                <p class="mt-2"><strong>Description:</strong> <span class="text-gray-600">{{ $course->description ?: 'No description' }}</span></p>
+                <p class="mt-2"><strong>Created by:</strong> <span class="text-gray-600">{{ $course->user->name }}</span></p>
+                <p class="mt-2"><strong>Total posts:</strong> <span class="text-gray-600">{{ $course->posts->count() }}</span></p>
             </div>
-            <div class="card-body">
-                <div class="mb-3">
-                    <strong>Course:</strong><br>
-                    <span class="text-muted">{{ $course->name }}</span>
-                </div>
-                <div class="mb-3">
-                    <strong>Description:</strong><br>
-                    <span class="text-muted">{{ $course->description ?: 'No description' }}</span>
-                </div>
-                <div class="mb-3">
-                    <strong>Created by:</strong><br>
-                    <span class="text-muted">{{ $course->user->name }}</span>
-                </div>
-                <div class="mb-3">
-                    <strong>Total posts:</strong><br>
-                    <span class="text-muted">{{ $course->posts->count() }}</span>
-                </div>
-            </div>
-        </div>
-        
-        <!-- Post Type Guide -->
-        <div class="card">
-            <div class="card-header">
-                <h6 class="mb-0">
-                    <i class="fas fa-question-circle me-2"></i>
-                    Post Type Guide
-                </h6>
-            </div>
-            <div class="card-body">
-                <div class="mb-3">
-                    <div class="d-flex align-items-center mb-2">
-                        <span class="badge bg-primary me-2">Text</span>
-                        <small class="text-muted">Simple text content</small>
-                    </div>
-                    <div class="d-flex align-items-center mb-2">
-                        <span class="badge bg-success me-2">Image</span>
-                        <small class="text-muted">Image files (JPG, PNG, GIF)</small>
-                    </div>
-                    <div class="d-flex align-items-center mb-2">
-                        <span class="badge bg-info me-2">File</span>
-                        <small class="text-muted">Documents (PDF, DOC, etc.)</small>
-                    </div>
-                    <div class="d-flex align-items-center">
-                        <span class="badge bg-warning me-2">Video</span>
-                        <small class="text-muted">Video files (MP4, AVI, etc.)</small>
-                    </div>
-                </div>
-                
-                <div class="alert alert-info">
-                    <i class="fas fa-lightbulb me-2"></i>
-                    <strong>Tip:</strong> You can combine text content with file uploads for richer posts.
-                </div>
+
+            <!-- Tip -->
+            <div class="bg-white shadow rounded-2xl p-5">
+                <h3 class="text-md font-semibold text-gray-700 mb-3 flex items-center gap-2">
+                    <i class="fas fa-lightbulb text-blue-500"></i> Tip
+                </h3>
+                <p class="text-sm text-gray-600">
+                    You can write text content, upload a file, or combine both for richer posts.
+                </p>
             </div>
         </div>
     </div>
 </div>
-
-<style>
-.breadcrumb {
-    background: transparent;
-    padding: 0;
-    margin-bottom: 1rem;
-}
-
-.breadcrumb-item a {
-    color: var(--primary-color);
-}
-
-.breadcrumb-item.active {
-    color: var(--text-secondary);
-}
-</style>
-
-<script>
-// Dynamic form behavior based on post type
-document.getElementById('type').addEventListener('change', function() {
-    const type = this.value;
-    const contentField = document.getElementById('content');
-    const fileField = document.getElementById('file');
-    
-    if (type === 'text') {
-        contentField.required = true;
-        fileField.required = false;
-        contentField.placeholder = 'Enter your text content...';
-    } else if (type === 'image' || type === 'video' || type === 'file') {
-        contentField.required = false;
-        fileField.required = true;
-        contentField.placeholder = 'Add optional description...';
-    }
-});
-</script>
-@endsection 
+@endsection

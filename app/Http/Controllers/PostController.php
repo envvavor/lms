@@ -56,34 +56,35 @@ class PostController extends Controller
         }
 
         $request->validate([
-            'title' => 'required|string|max:255',
-            'type' => 'required|in:text,image,file,video',
-            'content' => 'required_if:type,text',
-            'file' => 'required_if:type,image,file,video|file|max:10240', // 10MB max
+            'title'   => 'required|string|max:255',
+            'content' => 'nullable|string',
+            'file'    => 'nullable|file|max:30000', // max 30MB
         ]);
 
+        // pastikan salah satu ada
+        if (!$request->content && !$request->hasFile('file')) {
+            return back()->withErrors(['content' => 'Content or File is required.']);
+        }
+
         $data = [
-            'title' => $request->title,
-            'type' => $request->type,
+            'title'     => $request->title,
+            'content'   => $request->content,
             'course_id' => $course->id,
-            'user_id' => Auth::id(),
+            'user_id'   => Auth::id(),
         ];
 
-        if ($request->type === 'text') {
-            $data['content'] = $request->content;
-        } else {
-            if ($request->hasFile('file')) {
-                $file = $request->file('file');
-                $fileName = time() . '_' . $file->getClientOriginalName();
-                $filePath = $file->storeAs('posts', $fileName, 'public');
-                $data['file_path'] = $filePath;
-            }
+        if ($request->hasFile('file')) {
+            $file     = $request->file('file');
+            $fileName = time() . '_' . $file->getClientOriginalName();
+            $filePath = $file->storeAs('posts', $fileName, 'public');
+            $data['file_path'] = $filePath;
         }
 
         Post::create($data);
 
         return redirect()->route('courses.show', $course)->with('success', 'Post created successfully!');
     }
+
 
     /**
      * Display the specified resource.
@@ -130,35 +131,37 @@ class PostController extends Controller
         }
 
         $request->validate([
-            'title' => 'required|string|max:255',
-            'content' => 'required_if:type,text',
-            'file' => 'nullable|file|max:10240',
+            'title'   => 'required|string|max:255',
+            'content' => 'nullable|string',
+            'file'    => 'nullable|file|max:30000',
         ]);
 
+        if (!$request->content && !$request->hasFile('file') && !$post->file_path) {
+            return back()->withErrors(['content' => 'Content or File is required.']);
+        }
+
         $data = [
-            'title' => $request->title,
+            'title'   => $request->title,
+            'content' => $request->content,
         ];
 
-        if ($post->type === 'text') {
-            $data['content'] = $request->content;
-        } else {
-            if ($request->hasFile('file')) {
-                // Delete old file
-                if ($post->file_path) {
-                    Storage::disk('public')->delete($post->file_path);
-                }
-                
-                $file = $request->file('file');
-                $fileName = time() . '_' . $file->getClientOriginalName();
-                $filePath = $file->storeAs('posts', $fileName, 'public');
-                $data['file_path'] = $filePath;
+        if ($request->hasFile('file')) {
+            // hapus file lama kalau ada
+            if ($post->file_path) {
+                Storage::disk('public')->delete($post->file_path);
             }
+
+            $file     = $request->file('file');
+            $fileName = time() . '_' . $file->getClientOriginalName();
+            $filePath = $file->storeAs('posts', $fileName, 'public');
+            $data['file_path'] = $filePath;
         }
 
         $post->update($data);
 
         return redirect()->route('courses.show', $post->course)->with('success', 'Post updated successfully!');
     }
+
 
     /**
      * Remove the specified resource from storage.

@@ -255,6 +255,24 @@
                                                 </button>
                                             </form>
                                         </li>
+                                    @elseif(Auth::user()->isUser())
+                                        @if(Auth::user()->enrolledCourses()->where('course_id', $course->id)->exists())
+                                                <form action="{{ route('enrollments.unenroll', $course) }}" method="POST" class="flex-1">
+                                                @csrf
+                                                <button type="submit" 
+                                                        class="w-full text-left course-dropdown-item text-red-600 hover:bg-red-50">
+                                                    <i class="fas fa-user-times text-red-600"></i> Unenroll
+                                                </button>
+                                            </form>
+                                        @else
+                                            <form action="{{ route('enrollments.enroll', $course) }}" method="POST" class="flex-1">
+                                                @csrf
+                                                <button type="submit" 
+                                                        class="w-full px-4 py-2.5 text-sm bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 text-white rounded-xl font-medium transition-all duration-200 transform hover:scale-105 shadow-lg hover:shadow-xl">
+                                                    <i class="fas fa-user-plus mr-2"></i> Enroll Now
+                                                </button>
+                                            </form>
+                                        @endif
                                     @endif
                                 @endauth
                             </ul>
@@ -304,13 +322,13 @@
                         @auth
                             @if(Auth::user()->isUser())
                                 @if(Auth::user()->enrolledCourses()->where('course_id', $course->id)->exists())
-                                    <form action="{{ route('enrollments.unenroll', $course) }}" method="POST" class="flex-1">
+                                    <!-- <form action="{{ route('enrollments.unenroll', $course) }}" method="POST" class="flex-1">
                                         @csrf
                                         <button type="submit" 
                                                 class="w-full px-4 py-2.5 text-sm border-2 border-red-200 text-red-600 rounded-xl hover:bg-red-50 hover:border-red-300 font-medium transition-all duration-200 transform hover:scale-105">
                                             <i class="fas fa-user-times mr-2"></i> Unenroll
                                         </button>
-                                    </form>
+                                    </form> -->
                                 @else
                                     <form action="{{ route('enrollments.enroll', $course) }}" method="POST" class="flex-1">
                                         @csrf
