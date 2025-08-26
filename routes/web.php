@@ -13,7 +13,7 @@ use App\Http\Controllers\Auth\GoogleController;
 
 Route::get('/', function () {
     return view('welcome');
-});
+})->name('welcome');
 
 // Authentication routes with guest middleware
 Route::middleware(['guest'])->group(function () {
