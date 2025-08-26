@@ -105,6 +105,13 @@
                         </p>
                     </div>
 
+                    <div class="mb-3">
+                        <label for="link" class="form-label">YouTube/Drive Link</label>
+                        <input type="url" name="link" id="link" class="form-control" 
+                            value="{{ old('link', $post->link ?? '') }}" placeholder="https://...">
+                    </div>
+
+
                     <!-- Actions -->
                     <div class="flex justify-between items-center pt-4">
                         <a href="{{ route('courses.show', $course) }}" 

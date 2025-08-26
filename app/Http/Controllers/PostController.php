@@ -59,6 +59,7 @@ class PostController extends Controller
             'title'   => 'required|string|max:255',
             'content' => 'nullable|string',
             'file'    => 'nullable|file|max:30000', // max 30MB
+            'link'    => 'nullable|url',
         ]);
 
         // pastikan salah satu ada
@@ -71,6 +72,7 @@ class PostController extends Controller
             'content'   => $request->content,
             'course_id' => $course->id,
             'user_id'   => Auth::id(),
+            'link'      => $request->link,
         ];
 
         if ($request->hasFile('file')) {
@@ -134,6 +136,7 @@ class PostController extends Controller
             'title'   => 'required|string|max:255',
             'content' => 'nullable|string',
             'file'    => 'nullable|file|max:30000',
+            'link'    => 'nullable|url',
         ]);
 
         if (!$request->content && !$request->hasFile('file') && !$post->file_path) {
@@ -143,6 +146,7 @@ class PostController extends Controller
         $data = [
             'title'   => $request->title,
             'content' => $request->content,
+            'link'    => $request->link,
         ];
 
         if ($request->hasFile('file')) {

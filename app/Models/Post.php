@@ -9,11 +9,11 @@ class Post extends Model
 {
     use HasFactory;
 
-    protected $fillable = [
+        protected $fillable = [
         'title',
         'content',
-        'type', // text, image, file, video
         'file_path',
+        'link',
         'course_id',
         'user_id',
     ];

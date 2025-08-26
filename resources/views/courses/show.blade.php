@@ -154,7 +154,45 @@
                                         @endif
                                     </div>
                                 @endif
-                                <a href="{{ route('posts.show', $post) }}" class="btn btn-outline-dark btn-sm rounded-pill">
+                                @if ($post->link)
+                                    <!-- <div class="mt-3">
+                                        <strong>Link:</strong> 
+                                        <a href="{{ $post->link }}" target="_blank" class="text-primary">
+                                            {{ $post->link }}
+                                        </a>
+                                    </div> -->
+
+                                    {{-- Embed YouTube --}}
+                                    @if (Str::contains($post->link, 'youtube.com') || Str::contains($post->link, 'youtu.be'))
+                                        @php
+                                            preg_match('/(youtu\.be\/|v=)([^&]+)/', $post->link, $matches);
+                                            $youtubeId = $matches[2] ?? null;
+                                        @endphp
+                                        @if($youtubeId)
+                                            <div class="relative w-full" style="padding-top: 56.25%;"> {{-- 16:9 ratio --}}
+                                                <iframe class="absolute top-0 left-0 w-full h-full rounded-lg shadow"
+                                                        src="https://www.youtube.com/embed/{{ $youtubeId }}" 
+                                                        frameborder="0" allowfullscreen></iframe>
+                                            </div>
+                                        @endif
+                                    @endif
+
+                                    {{-- Embed Google Drive --}}
+                                    @if (Str::contains($post->link, 'drive.google.com'))
+                                        @php
+                                            preg_match('/\/d\/(.*?)(\/|$)/', $post->link, $matches);
+                                            $driveId = $matches[1] ?? null;
+                                        @endphp
+                                        @if($driveId)
+                                            <div class="relative w-full" style="padding-top: 56.25%;"> {{-- 16:9 ratio --}}
+                                                <iframe class="absolute top-0 left-0 w-full h-full rounded-lg shadow"
+                                                        src="https://drive.google.com/file/d/{{ $driveId }}/preview" 
+                                                        allow="autoplay"></iframe>
+                                            </div>
+                                        @endif
+                                    @endif
+                                @endif
+                                <a href="{{ route('posts.show', $post) }}" class="btn btn-outline-dark btn-sm rounded-pill mt-3">
                                     <i class="fas fa-eye me-1"></i> View Full
                                 </a>
                             </div>
