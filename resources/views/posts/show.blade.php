@@ -4,8 +4,9 @@
 
 @section('content')
 <script src="https://cdn.tailwindcss.com"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <div class="m-3 sm:m-5">
-<div class="page-header mb-5">
+<div class="page-header mb-4 sm:mb-2">
     <div class="row align-items-center">
         <div class="col-lg-8 col-md-12">
             <!-- Breadcrumb -->
@@ -55,11 +56,11 @@
                         <a href="{{ route('posts.edit', $post) }}" class="btn">
                             <i class="fas fa-edit me-2"></i>Edit
                         </a>
-                        <form action="{{ route('posts.destroy', $post) }}" method="POST" class="d-inline">
+                        <form action="{{ route('posts.destroy', $post) }}" method="POST" class="d-inline delete-post-form">
                             @csrf
                             @method('DELETE')
-                            <button type="submit" class="btn btn-outline-danger"
-                                    onclick="return confirm('Are you sure you want to delete this post?')">
+                            <button type="button" class="btn btn-outline-danger btn-delete-post"
+                                    data-post-title="{{ $post->title }}">
                                 <i class="fas fa-trash me-2"></i>Delete
                             </button>
                         </form>
@@ -199,6 +200,32 @@
     </div>
 </div>
 </div>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    document.querySelectorAll('.btn-delete-post').forEach(function(btn) {
+        btn.addEventListener('click', function(e) {
+            e.preventDefault();
+            const form = btn.closest('form');
+            const postTitle = btn.getAttribute('data-post-title') || 'this post';
+            Swal.fire({
+                title: 'Delete Post?',
+                html: `Are you sure you want to delete <b>${postTitle}</b>?<br>This action cannot be undone.`,
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#ef4444',
+                cancelButtonColor: '#6b7280',
+                confirmButtonText: 'Yes, delete',
+                cancelButtonText: 'Cancel',
+                reverseButtons: true
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    form.submit();
+                }
+            });
+        });
+    });
+});
+</script>
 <style>
 .page-title { color:#2b2738; }
 .post-content {

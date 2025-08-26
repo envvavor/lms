@@ -1,9 +1,10 @@
 @extends('layouts.app')
 
-@section('title', $course->name . ' - LMS Pro')
+@section('title', $course->name . ' - Course Details')
 
 @section('content')
 <script src="https://cdn.tailwindcss.com"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <div class="m-3 sm:m-5 animate-slide-up">
 
     <!-- Page Header -->
@@ -87,9 +88,20 @@
                             <div class="p-3 mb-4 border rounded-xl shadow-sm bg-light">
                                 <div class="d-flex justify-content-between align-items-start mb-2">
                                     <div>
+                                        @php
+                                            $icons = [
+                                                'text' => 'fa-file-alt',
+                                                'image' => 'fa-file-image',
+                                                'video' => 'fa-file-video',
+                                                'link' => 'fa-link',
+                                                'other' => 'fa-paperclip'
+                                            ];
+                                            $icon = $icons[$post->type] ?? 'fa-file';
+                                        @endphp
+
                                         <h5 class="fw-bold text-[#2b2738]">
-                                            <i class="fas fa-{{ $post->type === 'text' ? 'file-text' : ($post->type === 'image' ? 'image' : ($post->type === 'video' ? 'video' : 'file')) }} me-2 text-primary"></i>
-                                            {{ $post->title }}
+                                            <i class="fas {{ $icon }} me-2 text-primary"></i>
+                                            <a href="{{ route('posts.show', $post) }}" class="hover:text-blue-500">{{ $post->title }}</a>
                                         </h5>
                                         <small class="text-muted">
                                             <i class="fas fa-user me-1"></i>{{ $post->user->name }} • 
@@ -109,7 +121,9 @@
                                                     <li>
                                                         <form action="{{ route('posts.destroy', $post) }}" method="POST" class="d-inline">
                                                             @csrf @method('DELETE')
-                                                            <button type="submit" class="dropdown-item text-danger" onclick="return confirm('Delete this post?')">
+                                                            <button type="button" 
+                                                                    class="dropdown-item text-danger btn-delete-post"
+                                                                    data-post-title="{{ $post->title }}">
                                                                 <i class="fas fa-trash me-2"></i> Delete
                                                             </button>
                                                         </form>
@@ -256,4 +270,31 @@
         </div>
     </div>
 </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    document.querySelectorAll('.btn-delete-post').forEach(function(btn) {
+        btn.addEventListener('click', function(e) {
+            e.preventDefault();
+            const form = btn.closest('form');
+            const postTitle = btn.getAttribute('data-post-title') || 'this post';
+            Swal.fire({
+                title: 'Delete Post?',
+                html: `Are you sure you want to delete <b>${postTitle}</b>?<br>This action cannot be undone.`,
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#ef4444',
+                cancelButtonColor: '#6b7280',
+                confirmButtonText: 'Yes, delete',
+                cancelButtonText: 'Cancel',
+                reverseButtons: true
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    form.submit();
+                }
+            });
+        });
+    });
+});
+</script>
 @endsection

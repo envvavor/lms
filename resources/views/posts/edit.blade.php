@@ -3,253 +3,182 @@
 @section('title', 'Edit Post - ' . $post->title)
 
 @section('content')
-<!-- Page Header -->
-<div class="page-header">
-    <div class="row align-items-center">
-        <div class="col-lg-8 col-md-12">
-            <nav aria-label="breadcrumb">
-                <ol class="breadcrumb">
-                    <li class="breadcrumb-item">
-                        <a href="{{ route('courses.index') }}" class="text-decoration-none">
-                            <i class="fas fa-home me-1"></i>
-                            Courses
-                        </a>
-                    </li>
-                    <li class="breadcrumb-item">
-                        <a href="{{ route('courses.show', $post->course) }}" class="text-decoration-none">
-                            {{ $post->course->name }}
-                        </a>
-                    </li>
-                    <li class="breadcrumb-item">
-                        <a href="{{ route('posts.show', $post) }}" class="text-decoration-none">
-                            {{ $post->title }}
-                        </a>
-                    </li>
-                    <li class="breadcrumb-item active" aria-current="page">
-                        Edit
-                    </li>
-                </ol>
-            </nav>
-            
-            <h1 class="page-title">
-                <i class="fas fa-edit me-2"></i>
+<script src="https://cdn.tailwindcss.com"></script>
+<div class="m-3 sm:m-5">
+
+    <!-- Breadcrumb -->
+    <nav class="flex text-sm text-gray-600 mb-6" aria-label="Breadcrumb">
+        <ol class="inline-flex items-center space-x-2">
+            <li>
+                <a href="{{ route('courses.index') }}" class="hover:text-blue-600 flex items-center">
+                    <i class="fas fa-home mr-1"></i> Courses
+                </a>
+            </li>
+            <li>
+                <span class="mx-1">/</span>
+                <a href="{{ route('courses.show', $post->course) }}" class="hover:text-blue-600">
+                    {{ $post->course->name }}
+                </a>
+            </li>
+            <li>
+                <span class="mx-1">/</span>
+                <a href="{{ route('posts.show', $post) }}" class="hover:text-blue-600">
+                    {{ $post->title }}
+                </a>
+            </li>
+            <li>
+                <span class="mx-1">/</span>
+                <span class="text-gray-400">Edit</span>
+            </li>
+        </ol>
+    </nav>
+
+    <!-- Page Header -->
+    <div class="flex flex-col md:flex-row md:items-center md:justify-between mb-8">
+        <div>
+            <h1 class="text-2xl font-bold text-gray-800 flex items-center gap-2">
+                <i class="fas fa-edit text-blue-500"></i>
                 Edit Post
             </h1>
-            <p class="page-subtitle">
-                Update post: {{ $post->title }}
-            </p>
+            <p class="text-gray-500 mt-1">Update post: {{ $post->title }}</p>
         </div>
-        <div class="col-lg-4 col-md-12 text-lg-end text-md-start mt-3 mt-lg-0">
-            <a href="{{ route('posts.show', $post) }}" class="btn btn-outline-secondary">
-                <i class="fas fa-arrow-left me-2"></i>
-                Back to Post
-            </a>
-        </div>
+        <a href="{{ route('posts.show', $post) }}" 
+           class="mt-4 md:mt-0 inline-flex items-center px-4 py-2 border rounded-lg text-gray-700 border-gray-300 hover:bg-gray-100 transition">
+            <i class="fas fa-arrow-left mr-2"></i> Back to Post
+        </a>
     </div>
-</div>
 
-<!-- Edit Form -->
-<div class="row">
-    <div class="col-lg-8 col-md-12">
-        <div class="card">
-            <div class="card-header">
-                <h5 class="mb-0">
-                    <i class="fas fa-edit me-2"></i>
-                    Edit Post Details
-                </h5>
-            </div>
-            <div class="card-body">
-                <form action="{{ route('posts.update', $post) }}" method="POST" enctype="multipart/form-data">
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <!-- Form -->
+        <div class="lg:col-span-2">
+            <div class="bg-white shadow rounded-2xl p-6">
+                <h2 class="text-lg font-semibold text-gray-700 mb-4 flex items-center gap-2">
+                    <i class="fas fa-file-alt text-blue-500"></i> Edit Post Details
+                </h2>
+
+                <form action="{{ route('posts.update', $post) }}" method="POST" enctype="multipart/form-data" class="space-y-5">
                     @csrf
                     @method('PUT')
-                    
-                    <div class="mb-3">
-                        <label for="title" class="form-label">
-                            <i class="fas fa-heading me-1"></i>
-                            Post Title
+
+                    <!-- Title -->
+                    <div>
+                        <label for="title" class="block text-sm font-medium text-gray-700 mb-1">
+                            <i class="fas fa-heading mr-1"></i> Post Title
                         </label>
-                        <input type="text" class="form-control @error('title') is-invalid @enderror" 
-                               id="title" name="title" value="{{ old('title', $post->title) }}" required>
+                        <input type="text" id="title" name="title"
+                               class="p-2 w-full rounded-lg border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500 @error('title') border-red-500 @enderror"
+                               value="{{ old('title', $post->title) }}" required>
                         @error('title')
-                            <div class="invalid-feedback">
-                                <i class="fas fa-exclamation-circle me-1"></i>
-                                {{ $message }}
-                            </div>
+                            <p class="text-sm text-red-600 mt-1 flex items-center gap-1">
+                                <i class="fas fa-exclamation-circle"></i> {{ $message }}
+                            </p>
                         @enderror
                     </div>
 
-                    <div class="mb-3">
-                        <label for="type" class="form-label">
-                            <i class="fas fa-tag me-1"></i>
-                            Post Type
+                    <!-- Content -->
+                    <div>
+                        <label for="content" class="block text-sm font-medium text-gray-700 mb-1">
+                            <i class="fas fa-align-left mr-1"></i> Content
                         </label>
-                        <select class="form-select @error('type') is-invalid @enderror" id="type" name="type" required>
-                            <option value="">Select post type</option>
-                            <option value="text" {{ old('type', $post->type) == 'text' ? 'selected' : '' }}>Text</option>
-                            <option value="image" {{ old('type', $post->type) == 'image' ? 'selected' : '' }}>Image</option>
-                            <option value="file" {{ old('type', $post->type) == 'file' ? 'selected' : '' }}>File</option>
-                            <option value="video" {{ old('type', $post->type) == 'video' ? 'selected' : '' }}>Video</option>
-                        </select>
-                        @error('type')
-                            <div class="invalid-feedback">
-                                <i class="fas fa-exclamation-circle me-1"></i>
-                                {{ $message }}
-                            </div>
-                        @enderror
-                    </div>
-
-                    <div class="mb-3">
-                        <label for="content" class="form-label">
-                            <i class="fas fa-align-left me-1"></i>
-                            Content
-                        </label>
-                        <textarea class="form-control @error('content') is-invalid @enderror" 
-                                  id="content" name="content" rows="6" 
-                                  placeholder="Enter post content...">{{ old('content', $post->content) }}</textarea>
+                        <textarea id="content" name="content" rows="6"
+                                  class="p-2 w-full rounded-lg border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500 @error('content') border-red-500 @enderror"
+                                  placeholder="Write something...">{{ old('content', $post->content) }}</textarea>
                         @error('content')
-                            <div class="invalid-feedback">
-                                <i class="fas fa-exclamation-circle me-1"></i>
-                                {{ $message }}
-                            </div>
+                            <p class="text-sm text-red-600 mt-1 flex items-center gap-1">
+                                <i class="fas fa-exclamation-circle"></i> {{ $message }}
+                            </p>
                         @enderror
                     </div>
 
-                    <div class="mb-3">
-                        <label for="file" class="form-label">
-                            <i class="fas fa-file-upload me-1"></i>
-                            File (Optional)
+                    <!-- File -->
+                    <div>
+                        <label for="file" class="block text-sm font-medium text-gray-700 mb-1">
+                            <i class="fas fa-file-upload mr-1"></i> File (optional)
                         </label>
-                        <input type="file" class="form-control @error('file') is-invalid @enderror" 
-                               id="file" name="file">
+                        <input type="file" id="file" name="file"
+                               class="w-full text-gray-700 file:mr-4 file:py-2 file:px-4 
+                                      file:rounded-lg file:border-0 
+                                      file:text-sm file:font-semibold
+                                      file:bg-blue-50 file:text-blue-600
+                                      hover:file:bg-blue-100 
+                                      @error('file') border-red-500 @enderror">
                         @error('file')
-                            <div class="invalid-feedback">
-                                <i class="fas fa-exclamation-circle me-1"></i>
-                                {{ $message }}
-                            </div>
+                            <p class="text-sm text-red-600 mt-1 flex items-center gap-1">
+                                <i class="fas fa-exclamation-circle"></i> {{ $message }}
+                            </p>
                         @enderror
-                        <div class="form-text">
-                            <i class="fas fa-info-circle me-1"></i>
-                            Leave empty to keep the current file. Upload a new file to replace the existing one.
-                        </div>
+                        <p class="text-sm text-gray-500 mt-1">
+                            <i class="fas fa-info-circle mr-1"></i> Leave empty to keep the current file.
+                        </p>
                     </div>
 
-                    <div class="d-flex justify-content-between">
-                        <a href="{{ route('posts.show', $post) }}" class="btn btn-outline-secondary">
-                            <i class="fas fa-times me-2"></i>
-                            Cancel
+                    <!-- Link -->
+                    <div>
+                        <label for="link" class="block text-sm font-medium text-gray-700 mb-1">
+                            <i class="fas fa-link mr-1"></i> YouTube/Drive Link
+                        </label>
+                        <input type="url" id="link" name="link"
+                               class="p-2 w-full rounded-lg border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500"
+                               value="{{ old('link', $post->link ?? '') }}" placeholder="https://...">
+                    </div>
+
+                    <!-- Actions -->
+                    <div class="flex justify-between items-center pt-4">
+                        <a href="{{ route('posts.show', $post) }}" 
+                           class="inline-flex items-center px-4 py-2 border rounded-lg text-gray-700 border-gray-300 hover:bg-gray-100 transition">
+                            <i class="fas fa-times mr-2"></i> Cancel
                         </a>
-                        <button type="submit" class="btn btn-primary">
-                            <i class="fas fa-save me-2"></i>
-                            Update Post
+                        <button type="submit"
+                                class="inline-flex items-center px-5 py-2 bg-blue-600 text-white font-medium rounded-lg shadow hover:bg-blue-700 transition">
+                            <i class="fas fa-save mr-2"></i> Update Post
                         </button>
                     </div>
                 </form>
             </div>
         </div>
-    </div>
-    
-    <div class="col-lg-4 col-md-12 mt-4 mt-lg-0">
-        <!-- Current Post Info -->
-        <div class="card mb-4">
-            <div class="card-header">
-                <h6 class="mb-0">
-                    <i class="fas fa-info-circle me-2"></i>
-                    Current Post Info
-                </h6>
-            </div>
-            <div class="card-body">
-                <div class="mb-3">
-                    <strong>Title:</strong><br>
-                    <span class="text-muted">{{ $post->title }}</span>
-                </div>
-                <div class="mb-3">
-                    <strong>Type:</strong><br>
-                    <span class="badge bg-{{ $post->type === 'text' ? 'primary' : ($post->type === 'image' ? 'success' : ($post->type === 'video' ? 'warning' : 'info')) }}">
+
+        <!-- Sidebar -->
+        <div class="space-y-6">
+            <!-- Post Info -->
+            <div class="bg-white shadow rounded-2xl p-5">
+                <h3 class="text-md font-semibold text-gray-700 mb-3 flex items-center gap-2">
+                    <i class="fas fa-info-circle text-blue-500"></i> Current Post Info
+                </h3>
+                <p><strong>Title:</strong> <span class="text-gray-600">{{ $post->title }}</span></p>
+                <p class="mt-2"><strong>Type:</strong> 
+                    <span class="px-2 py-1 text-xs rounded-lg 
+                        {{ $post->type === 'text' ? 'bg-blue-100 text-blue-600' : 
+                           ($post->type === 'image' ? 'bg-green-100 text-green-600' :
+                           ($post->type === 'video' ? 'bg-yellow-100 text-yellow-600' : 'bg-gray-100 text-gray-600')) }}">
                         {{ ucfirst($post->type) }}
                     </span>
-                </div>
-                <div class="mb-3">
-                    <strong>Course:</strong><br>
-                    <span class="text-muted">{{ $post->course->name }}</span>
-                </div>
-                <div class="mb-3">
-                    <strong>Created:</strong><br>
-                    <span class="text-muted">{{ $post->created_at->format('M d, Y H:i') }}</span>
-                </div>
+                </p>
+                <p class="mt-2"><strong>Course:</strong> <span class="text-gray-600">{{ $post->course->name }}</span></p>
+                <p class="mt-2"><strong>Created:</strong> <span class="text-gray-600">{{ $post->created_at->format('M d, Y H:i') }}</span></p>
                 @if($post->file_path)
-                    <div class="mb-3">
-                        <strong>Current File:</strong><br>
-                        <span class="text-muted">{{ basename($post->file_path) }}</span>
-                    </div>
+                    <p class="mt-2"><strong>Current File:</strong> <span class="text-gray-600">{{ basename($post->file_path) }}</span></p>
                 @endif
             </div>
-        </div>
-        
-        <!-- File Preview -->
-        @if($post->file_path)
-            <div class="card">
-                <div class="card-header">
-                    <h6 class="mb-0">
-                        <i class="fas fa-file me-2"></i>
-                        Current File
-                    </h6>
-                </div>
-                <div class="card-body">
+
+            <!-- Preview -->
+            @if($post->file_path)
+                <div class="bg-white shadow rounded-2xl p-5">
+                    <h3 class="text-md font-semibold text-gray-700 mb-3 flex items-center gap-2">
+                        <i class="fas fa-file text-blue-500"></i> Current File Preview
+                    </h3>
                     @if($post->type === 'image')
-                        <img src="{{ Storage::url($post->file_path) }}" 
-                             alt="{{ $post->title }}" 
-                             class="img-fluid rounded mb-3">
+                        <img src="{{ Storage::url($post->file_path) }}" alt="{{ $post->title }}" class="rounded-lg w-full">
                     @elseif($post->type === 'video')
-                        <video controls class="w-100 rounded mb-3" style="max-height: 200px;">
+                        <video controls class="rounded-lg w-full max-h-64">
                             <source src="{{ Storage::url($post->file_path) }}" type="video/mp4">
-                            Your browser does not support the video tag.
+                            Your browser does not support video.
                         </video>
                     @else
-                        <div class="d-flex align-items-center p-3 bg-light rounded">
-                            <div class="file-icon me-3">
-                                <i class="fas fa-file-pdf fa-2x text-primary"></i>
-                            </div>
-                            <div>
-                                <strong>{{ basename($post->file_path) }}</strong>
-                                <br>
-                                <small class="text-muted">Current file</small>
-                            </div>
-                        </div>
+                        <p class="text-gray-500 text-sm">File available: <a href="{{ Storage::url($post->file_path) }}" target="_blank" class="text-blue-600 hover:underline">{{ basename($post->file_path) }}</a></p>
                     @endif
-                    
-                    <div class="mt-3">
-                        <a href="{{ Storage::url($post->file_path) }}" 
-                           class="btn btn-sm btn-outline-primary" 
-                           target="_blank">
-                            <i class="fas fa-download me-1"></i>
-                            Download Current File
-                        </a>
-                    </div>
                 </div>
-            </div>
-        @endif
+            @endif
+        </div>
     </div>
 </div>
-
-<style>
-.breadcrumb {
-    background: transparent;
-    padding: 0;
-    margin-bottom: 1rem;
-}
-
-.breadcrumb-item a {
-    color: var(--primary-color);
-}
-
-.breadcrumb-item.active {
-    color: var(--text-secondary);
-}
-
-.file-icon {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-</style>
-@endsection 
+@endsection

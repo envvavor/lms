@@ -59,7 +59,7 @@
                             <i class="fas fa-heading mr-1"></i> Post Title
                         </label>
                         <input type="text" id="title" name="title"
-                               class="w-full rounded-lg border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500 @error('title') border-red-500 @enderror"
+                               class="p-2 w-full rounded-lg border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500 @error('title') border-red-500 @enderror"
                                value="{{ old('title') }}" required placeholder="Enter post title...">
                         @error('title')
                             <p class="text-sm text-red-600 mt-1 flex items-center gap-1">
@@ -74,7 +74,7 @@
                             <i class="fas fa-align-left mr-1"></i> Content (optional)
                         </label>
                         <textarea id="content" name="content" rows="6"
-                                  class="w-full rounded-lg border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500 @error('content') border-red-500 @enderror"
+                                  class="p-2 w-full rounded-lg border-gray-300 shadow-sm focus:ring-blue-500 focus:border-blue-500 @error('content') border-red-500 @enderror"
                                   placeholder="Write something...">{{ old('content') }}</textarea>
                         @error('content')
                             <p class="text-sm text-red-600 mt-1 flex items-center gap-1">

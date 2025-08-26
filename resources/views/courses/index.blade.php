@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Courses - LMS Pro')
+@section('title', 'Courses - LMS Creativy')
 
 @section('content')
 
@@ -246,29 +246,32 @@
                                         </li>
                                         <li class="border-t border-gray-100 my-1"></li>
                                         <li>
-                                            <form action="{{ route('courses.destroy', $course) }}" method="POST">
+                                            <form action="{{ route('courses.destroy', $course) }}" method="POST" class="delete-course-form">
                                                 @csrf
                                                 @method('DELETE')
-                                                <button type="submit" onclick="return confirm('Delete this course?')" 
-                                                        class="w-full text-left course-dropdown-item text-red-600 hover:bg-red-50">
+                                                <button type="submit"
+                                                        class="w-full text-left course-dropdown-item text-red-600 hover:bg-red-50 course-delete-btn"
+                                                        data-course-name="{{ $course->name }}">
                                                     <i class="fas fa-trash text-red-600"></i> Delete Course
                                                 </button>
                                             </form>
                                         </li>
                                     @elseif(Auth::user()->isUser())
                                         @if(Auth::user()->enrolledCourses()->where('course_id', $course->id)->exists())
-                                                <form action="{{ route('enrollments.unenroll', $course) }}" method="POST" class="flex-1">
+                                                <form action="{{ route('enrollments.unenroll', $course) }}" method="POST" class="flex-1 unenroll-form">
                                                 @csrf
-                                                <button type="submit" 
-                                                        class="w-full text-left course-dropdown-item text-red-600 hover:bg-red-50">
+                                                <button type="button"
+                                                        class="w-full text-left course-dropdown-item text-red-600 hover:bg-red-50 unenroll-btn"
+                                                        data-course-name="{{ $course->name }}">
                                                     <i class="fas fa-user-times text-red-600"></i> Unenroll
                                                 </button>
                                             </form>
                                         @else
-                                            <form action="{{ route('enrollments.enroll', $course) }}" method="POST" class="flex-1">
+                                            <form action="{{ route('enrollments.enroll', $course) }}" method="POST" class="flex-1 enroll-form">
                                                 @csrf
-                                                <button type="submit" 
-                                                        class="w-full px-4 py-2.5 text-sm bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 text-white rounded-xl font-medium transition-all duration-200 transform hover:scale-105 shadow-lg hover:shadow-xl">
+                                                <button type="button"
+                                                        class="w-full px-4 py-2.5 text-sm bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 text-white rounded-xl font-medium transition-all duration-200 transform hover:scale-105 shadow-lg hover:shadow-xl enroll-btn"
+                                                        data-course-name="{{ $course->name }}">
                                                     <i class="fas fa-user-plus mr-2"></i> Enroll Now
                                                 </button>
                                             </form>
@@ -330,10 +333,11 @@
                                         </button>
                                     </form> -->
                                 @else
-                                    <form action="{{ route('enrollments.enroll', $course) }}" method="POST" class="flex-1">
+                                    <form action="{{ route('enrollments.enroll', $course) }}" method="POST" class="flex-1 enroll-form">
                                         @csrf
-                                        <button type="submit" 
-                                                class="w-full px-4 py-2.5 text-sm bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 text-white rounded-xl font-medium transition-all duration-200 transform hover:scale-105 shadow-lg hover:shadow-xl">
+                                        <button type="button"
+                                                class="w-full px-4 py-2.5 text-sm bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 text-white rounded-xl font-medium transition-all duration-200 transform hover:scale-105 shadow-lg hover:shadow-xl enroll-btn"
+                                                data-course-name="{{ $course->name }}">
                                             <i class="fas fa-user-plus mr-2"></i> Enroll Now
                                         </button>
                                     </form>
@@ -378,6 +382,7 @@
     </div>
 @endif
 
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     const toggles = document.querySelectorAll('.course-dropdown-toggle');
@@ -420,8 +425,82 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         }
     });
+
+    // SweetAlert2 for course delete
+    document.querySelectorAll('.course-delete-btn').forEach(btn => {
+        btn.addEventListener('click', function(e) {
+            e.preventDefault();
+            const form = btn.closest('form');
+            const courseName = btn.getAttribute('data-course-name') || 'this course';
+            Swal.fire({
+                title: 'Delete Course?',
+                html: `Are you sure you want to delete <b>${courseName}</b>?<br>This action cannot be undone.`,
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#ef4444',
+                cancelButtonColor: '#6b7280',
+                confirmButtonText: 'Yes, delete',
+                cancelButtonText: 'Cancel',
+                reverseButtons: true
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    form.submit();
+                }
+            });
+        });
+    });
+
+    // SweetAlert2 for unenroll
+    document.querySelectorAll('.unenroll-btn').forEach(btn => {
+        btn.addEventListener('click', function(e) {
+            e.preventDefault();
+            const form = btn.closest('form');
+            const courseName = btn.getAttribute('data-course-name') || 'this course';
+            Swal.fire({
+                title: 'Unenroll from Course?',
+                html: `Are you sure you want to unenroll from <b>${courseName}</b>?`,
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#ef4444',
+                cancelButtonColor: '#6b7280',
+                confirmButtonText: 'Yes, unenroll',
+                cancelButtonText: 'Cancel',
+                reverseButtons: true
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    form.submit();
+                }
+            });
+        });
+    });
+
+    // SweetAlert2 for enroll
+    document.querySelectorAll('.enroll-btn').forEach(btn => {
+        btn.addEventListener('click', function(e) {
+            e.preventDefault();
+            const form = btn.closest('form');
+            const courseName = btn.getAttribute('data-course-name') || 'this course';
+            Swal.fire({
+                title: 'Enroll in Course?',
+                html: `Do you want to enroll in <b>${courseName}</b>?`,
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonColor: '#10b981',
+                cancelButtonColor: '#6b7280',
+                confirmButtonText: 'Yes, enroll',
+                cancelButtonText: 'Cancel',
+                reverseButtons: true
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    form.submit();
+                }
+            });
+        });
+    });
 });
 </script>
 
 </div>
+
+<p class="text-center text-black/20 mt-20">@ 2025 all rights reserved by https://github.com/envvavor</p>
 @endsection
