@@ -31,6 +31,11 @@ Route::match(['GET', 'POST'], '/logout', function () {
 
 // Protected routes that require authentication
 Route::middleware(['auth'])->group(function () {
+
+    // all courses
+    Route::get('/courses/all', [CourseController::class, 'allCourses'])
+    ->name('courses.all');
+
     Route::get('/users/profile', [UserController::class, 'profile'])->name('profile.show');
 
     // Course routes
@@ -52,8 +57,10 @@ Route::middleware(['auth'])->group(function () {
     Route::resource('users', UserController::class);
     
 
+
 });
 
     
 Route::get('auth/google', [GoogleController::class, 'redirect'])->name('google.login');
 Route::get('auth/google/callback', [GoogleController::class, 'callback']);
+

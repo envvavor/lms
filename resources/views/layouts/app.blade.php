@@ -559,9 +559,16 @@
         <!-- Sidebar Navigation -->
         <ul class="sidebar-nav">
             <li class="nav-item">
-                <a class="nav-link {{ request()->routeIs('courses.*') ? 'active' : '' }}" href="{{ route('courses.index') }}">
+                <a class="nav-link {{ request()->routeIs('courses.index') ? 'active' : '' }}" href="{{ route('courses.index') }}">
                     <i class="fas fa-book"></i>
                     <span class="nav-text">Courses</span>
+                </a>
+            </li>
+            
+            <li class="nav-item">
+                <a class="nav-link {{ request()->routeIs('courses.all') ? 'active' : '' }}" href="{{ route('courses.all') }}">
+                    <i class="fas fa-eye"></i>
+                    <span class="nav-text">AllCourses</span>
                 </a>
             </li>
 

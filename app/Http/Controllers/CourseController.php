@@ -141,4 +141,18 @@ class CourseController extends Controller
         $course->delete();
         return redirect()->route('courses.index')->with('success', 'Course deleted successfully!');
     }
+
+    /**
+     * Display all available courses (public list).
+     */
+    public function allCourses()
+    {
+        // Ambil semua courses dengan pagination
+        $courses = Course::with('user') // include pembuat course
+            ->withCount('enrollments') // hitung jumlah siswa enrolled
+            ->paginate(12);
+
+        return view('courses.all', compact('courses'));
+    }
+
 }
