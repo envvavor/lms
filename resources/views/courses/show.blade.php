@@ -135,6 +135,10 @@
                                 </div>
                                 <p class="text-muted mb-2">{{ Str::limit($post->content, 200) }}</p>
                                 <!-- File Attachment -->
+                                @php
+                                    $filename = basename($post->file_path);
+                                    $cleanName = explode("_", $filename, 2)[1] ?? $filename;
+                                @endphp
                                 @if($post->file_path)
                                     <div class="mb-3">
                                         @php
@@ -153,18 +157,61 @@
                                                 Your browser does not support the video tag.
                                             </video>
                                         
-                                        @elseif(in_array($ext, ['pdf']))
+                                        @elseif(in_array($ext, ['pdf', ]))
                                             <!-- PDF embed -->
-                                            <iframe src="{{ asset('storage/' . $post->file_path) }}" class="w-full h-64 rounded-lg"></iframe>
-                                            <a href="{{ asset('storage/' . $post->file_path) }}" target="_blank" 
-                                            class="text-blue-600 underline text-sm">Open PDF</a>
-                                        
+                                            <!-- <iframe src="{{ asset('storage/' . $post->file_path) }}" class="w-full h-64 rounded-lg"></iframe> -->
+                                            <!-- <a href="{{ asset('storage/' . $post->file_path) }}" target="_blank" 
+                                            class="text-blue-600 underline text-sm">Open PDF</a> -->
+                                            <!-- File Attachment Card -->
+                                            <!-- File Attachment Card Responsive -->
+                                            <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between w-full bg-white border border-gray-200 rounded-2xl shadow-sm p-4 mb-3 hover:shadow-md transition gap-3">
+
+                                                <!-- File Info -->
+                                                <div class="flex items-center space-x-3 w-full sm:w-auto">
+                                                    <div class="flex items-center justify-center w-12 h-12 bg-blue-100 text-blue-600 rounded-xl shrink-0">
+                                                        <i class="fas fa-paperclip text-lg"></i>
+                                                    </div>
+                                                    <div class="min-w-0">
+                                                        <p class="text-gray-800 font-medium truncate">
+                                                            {{ $cleanName }}
+                                                        </p>
+                                                        <p class="text-sm text-gray-500">Attachment File</p>
+                                                    </div>
+                                                </div>
+
+                                                <!-- Download Button -->
+                                                <div class="w-full sm:w-auto">
+                                                    <a href="{{ asset('storage/' . $post->file_path) }}" target="_blank"
+                                                    class="inline-flex justify-center items-center w-full sm:w-auto px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-xl hover:bg-blue-700 transition">
+                                                        <i class="fas fa-eye mr-2"></i> Open PDF
+                                                    </a>
+                                                </div>
+                                            </div>
                                         @else
-                                            <!-- Download link for other files -->
-                                            <a href="{{ asset('storage/' . $post->file_path) }}" target="_blank"
-                                            class="inline-flex items-center px-3 py-1 bg-blue-50 text-blue-700 rounded-lg hover:bg-blue-100">
-                                                <i class="fas fa-paperclip mr-2"></i> Download Attachment
-                                            </a>
+                                            <!-- File Attachment Card Responsive -->
+                                            <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between w-full bg-white border border-gray-200 rounded-2xl shadow-sm p-4 mb-3 hover:shadow-md transition gap-3">
+
+                                                <!-- File Info -->
+                                                <div class="flex items-center space-x-3 w-full sm:w-auto">
+                                                    <div class="flex items-center justify-center w-12 h-12 bg-blue-100 text-blue-600 rounded-xl shrink-0">
+                                                        <i class="fas fa-paperclip text-lg"></i>
+                                                    </div>
+                                                    <div class="min-w-0">
+                                                        <p class="text-gray-800 font-medium truncate">
+                                                            {{ $cleanName }}
+                                                        </p>
+                                                        <p class="text-sm text-gray-500">Attachment File</p>
+                                                    </div>
+                                                </div>
+
+                                                <!-- Download Button -->
+                                                <div class="w-full sm:w-auto">
+                                                    <a href="{{ asset('storage/' . $post->file_path) }}" target="_blank"
+                                                    class="inline-flex justify-center items-center w-full sm:w-auto px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-xl hover:bg-blue-700 transition">
+                                                        <i class="fas fa-download mr-2"></i> Download
+                                                    </a>
+                                                </div>
+                                            </div>
                                         @endif
                                     </div>
                                 @endif

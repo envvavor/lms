@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Welcome - LMS</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="icon" href="{{ asset('logo-web.png') }}" type="image/x-icon"> 
 </head>
 <body class="bg-gray-100 flex items-center justify-center h-screen">
 

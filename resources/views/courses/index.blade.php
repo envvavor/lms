@@ -501,6 +501,4 @@ document.addEventListener('DOMContentLoaded', function() {
 </script>
 
 </div>
-
-<p class="text-center text-black/20 mt-20">@ 2025 all rights reserved by https://github.com/envvavor</p>
 @endsection

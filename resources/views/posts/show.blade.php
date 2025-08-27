@@ -115,10 +115,34 @@
                             </a>
                         
                         @else
-                            <a href="{{ asset('storage/' . $post->file_path) }}" target="_blank"
-                               class="btn btn-outline-dark">
-                                <i class="fas fa-paperclip me-2"></i> Download Attachment
-                            </a>
+                            <!-- File Attachment Card Responsive -->
+                            @php
+                                $filename = basename($post->file_path);
+                                $cleanName = explode("_", $filename, 2)[1] ?? $filename;
+                            @endphp
+                            <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between w-full bg-white border border-gray-200 rounded-2xl shadow-sm p-4 mb-3 hover:shadow-md transition gap-3">
+
+                                <!-- File Info -->
+                                <div class="flex items-center space-x-3 w-full sm:w-auto">
+                                    <div class="flex items-center justify-center w-12 h-12 bg-blue-100 text-blue-600 rounded-xl shrink-0">
+                                        <i class="fas fa-paperclip text-lg"></i>
+                                    </div>
+                                    <div class="min-w-0">
+                                        <p class="text-gray-800 font-medium truncate">
+                                            {{ $cleanName }}
+                                        </p>
+                                        <p class="text-sm text-gray-500">Attachment File</p>
+                                    </div>
+                                </div>
+
+                                <!-- Download Button -->
+                                <div class="w-full sm:w-auto">
+                                    <a href="{{ asset('storage/' . $post->file_path) }}" target="_blank"
+                                    class="inline-flex justify-center items-center w-full sm:w-auto px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-xl hover:bg-blue-700 transition">
+                                        <i class="fas fa-download mr-2"></i> Download
+                                    </a>
+                                </div>
+                            </div>
                         @endif
                     </div>
                 @endif
