@@ -6,14 +6,19 @@ use App\Http\Controllers\PostController;
 use App\Http\Controllers\EnrollmentController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\Auth\GoogleController;
+use App\Models\Course;
 
 // Route::get('/', function () {
 //     return redirect()->route('courses.index');
 // });
 
+
+
 Route::get('/', function () {
-    return view('welcome');
+    $courses = Course::with('user')->latest()->take(6)->get(); 
+    return view('welcome', compact('courses'));
 })->name('welcome');
+
 
 // Authentication routes with guest middleware
 Route::middleware(['guest'])->group(function () {

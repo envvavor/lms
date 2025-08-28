@@ -51,19 +51,19 @@
                         </div>
                     @elseif(Auth::user()->isUser())
                         @if(Auth::user()->enrolledCourses()->where('course_id', $course->id)->exists())
-                            <form action="{{ route('enrollments.unenroll', $course) }}" method="POST" class="d-inline">
+                            <!-- <form action="{{ route('enrollments.unenroll', $course) }}" method="POST" class="d-inline">
                                 @csrf
                                 <button type="submit" class="btn btn-outline-danger rounded-pill shadow-sm">
                                     <i class="fas fa-user-times me-2"></i> Unenroll
                                 </button>
-                            </form>
+                            </form> -->
                         @else
-                            <form action="{{ route('enrollments.enroll', $course) }}" method="POST" class="d-inline">
+                            <!-- <form action="{{ route('enrollments.enroll', $course) }}" method="POST" class="d-inline">
                                 @csrf
                                 <button type="submit" class="btn btn-success rounded-pill shadow-sm">
                                     <i class="fas fa-user-plus me-2"></i> Enroll
                                 </button>
-                            </form>
+                            </form> -->
                         @endif
                     @endif
                 @endauth

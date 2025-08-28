@@ -74,7 +74,8 @@
                         <div class="flex items-center justify-between text-sm text-gray-500 bg-gray-50 rounded-lg px-3 py-2 border border-gray-100">
                             <span class="flex items-center">
                                 <i class="fas fa-calendar mr-2 text-indigo-500"></i> 
-                                {{ $course->created_at->format('M d, Y') }}
+                                <p class="mr-1">Created at</p>
+                                {{ $course->created_at->format('d M, Y') }}
                             </span>
                             <div class="w-2 h-2 bg-indigo-300 rounded-full"></div>
                         </div>
@@ -100,7 +101,7 @@
                                     </form> -->
                                     <button type="" 
                                             class="w-full px-4 py-2.5 text-sm border-2 border-green-200 text-green-500 rounded-xl  font-medium hover:cursor-not-allowed">
-                                        <i class="fas fa-thumb mr-2"></i> You Are Allready Joined
+                                        <i class="fas fa-thumb mr-2"></i> You Are Already Joined
                                     </button>
                                 @else
                                     <form action="{{ route('enrollments.enroll', $course) }}" method="POST" class="flex-1 enroll-form">

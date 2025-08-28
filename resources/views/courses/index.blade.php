@@ -359,7 +359,7 @@
                 @if(Auth::user()->isUser())
                     <h3 class="text-2xl font-bold text-gray-800 mb-2">You Havent Joined Any Courses</h3>
                     <p class="text-gray-600 mb-8 leading-relaxed">Search Courses List If You Want To Join Any Courses</p>
-                    <a href="#" 
+                    <a href="{{ route('courses.all') }}" 
                        class="inline-flex items-center px-6 py-3 bg-[#2b2738] hover:bg-indigo-700 text-white font-semibold rounded-xl transition-all duration-200 transform hover:scale-105 shadow-lg hover:shadow-xl">
                         <i class="fas fa-eye mr-3"></i> Search Courses List
                     </a>

@@ -567,7 +567,7 @@
             
             <li class="nav-item">
                 <a class="nav-link {{ request()->routeIs('courses.all') ? 'active' : '' }}" href="{{ route('courses.all') }}">
-                    <i class="fas fa-eye"></i>
+                    <i class="fas fa-cart-plus"></i>
                     <span class="nav-text">AllCourses</span>
                 </a>
             </li>

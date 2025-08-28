@@ -47,3 +47,5 @@ npm run build
 # Atau untuk pengembangan:
 npm run dev
 php artisan serve     # biasanya di http://127.0.0.1:8000
+
+# Only God And I Who Knows How This Code Works
