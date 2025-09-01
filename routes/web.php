@@ -19,6 +19,7 @@ Route::get('/', function () {
     return view('welcome', compact('courses'));
 })->name('welcome');
 
+Route::view('/privacy-policy', 'privacy-policy')->name('privacy.policy');
 
 // Authentication routes with guest middleware
 Route::middleware(['guest'])->group(function () {

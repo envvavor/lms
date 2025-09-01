@@ -147,13 +147,13 @@
 
                                         @if(in_array($ext, ['jpg','jpeg','png','gif','webp']))
                                             <!-- Image preview -->
-                                            <img src="{{ asset('storage/' . $post->file_path) }}" alt="Attachment"
+                                            <img src="{{ asset($post->file_path) }}" alt="Attachment"
                                                 class="rounded-lg shadow max-h-64 object-cover">
                                         
                                         @elseif(in_array($ext, ['mp4','webm','ogg']))
                                             <!-- Video preview -->
                                             <video controls class="w-full rounded-lg shadow">
-                                                <source src="{{ asset('storage/' . $post->file_path) }}" type="video/{{ $ext }}">
+                                                <source src="{{ asset($post->file_path) }}" type="video/{{ $ext }}">
                                                 Your browser does not support the video tag.
                                             </video>
                                         
@@ -181,7 +181,7 @@
 
                                                 <!-- Download Button -->
                                                 <div class="w-full sm:w-auto">
-                                                    <a href="{{ asset('storage/' . $post->file_path) }}" target="_blank"
+                                                    <a href="{{ asset($post->file_path) }}" target="_blank"
                                                     class="inline-flex justify-center items-center w-full sm:w-auto px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-xl hover:bg-blue-700 transition">
                                                         <i class="fas fa-eye mr-2"></i> Open PDF
                                                     </a>
@@ -206,7 +206,7 @@
 
                                                 <!-- Download Button -->
                                                 <div class="w-full sm:w-auto">
-                                                    <a href="{{ asset('storage/' . $post->file_path) }}" target="_blank"
+                                                    <a href="{{ asset($post->file_path) }}" target="_blank"
                                                     class="inline-flex justify-center items-center w-full sm:w-auto px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-xl hover:bg-blue-700 transition">
                                                         <i class="fas fa-download mr-2"></i> Download
                                                     </a>

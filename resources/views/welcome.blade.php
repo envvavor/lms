@@ -12,7 +12,7 @@
     <!-- Hero Section -->
     <section class="bg-gradient-to-r from-indigo-600 to-blue-500 text-white py-20">
         <div class="max-w-5xl mx-auto px-6 text-center">
-            <h1 class="text-4xl md:text-5xl font-extrabold mb-4">Welcome to <span class="text-yellow-300">Creativy</span></h1>
+            <h1 class="text-4xl md:text-5xl font-extrabold mb-4">Welcome to <span class="text-yellow-300">Creativy LMS</span></h1>
             <p class="text-lg md:text-xl mb-8">Your modern Learning Management System for courses, materials, and collaboration.</p>
             
             @auth
@@ -57,12 +57,16 @@
         </div>
     </section>
 
-    <!-- Footer -->
-    <footer class="bg-gray-100 py-6 mt-10 text-center text-sm text-gray-500">
-        &copy; {{ date('Y') }} Creativy LMS. All rights reserved.
+    <footer class="bg-gray-100 py-6 text-center">
+        <a href="https://lms.sekolahadvertiser.com/privacy-policy"
+           class="text-blue-600 hover:text-blue-800 hover:underline">
+           Privacy Policy
+        </a>
     </footer>
+
 
     <!-- Font Awesome -->
     <script src="https://kit.fontawesome.com/64d58efce2.js" crossorigin="anonymous"></script>
 </body>
+
 </html>

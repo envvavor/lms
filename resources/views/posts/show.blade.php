@@ -95,21 +95,21 @@
                         @endphp
 
                         @if(in_array($ext, ['jpg','jpeg','png','gif','webp']))
-                            <img src="{{ asset('storage/' . $post->file_path) }}" 
+                            <img src="{{ asset($post->file_path) }}" 
                                 alt="Attachment"
                                 class="img-fluid rounded shadow"
                                 style="max-height:350px; object-fit:cover;">
                         
                         @elseif(in_array($ext, ['mp4','webm','ogg']))
                             <video controls class="w-100 rounded shadow" style="max-height:350px;">
-                                <source src="{{ asset('storage/' . $post->file_path) }}" type="video/{{ $ext }}">
+                                <source src="{{ asset($post->file_path) }}" type="video/{{ $ext }}">
                                 Your browser does not support the video tag.
                             </video>
                         
                         @elseif($ext === 'pdf')
-                            <iframe src="{{ asset('storage/' . $post->file_path) }}" 
+                            <iframe src="{{ asset($post->file_path) }}" 
                                     class="w-100 rounded" style="height:400px;" frameborder="0"></iframe>
-                            <a href="{{ asset('storage/' . $post->file_path) }}" target="_blank" 
+                            <a href="{{ asset($post->file_path) }}" target="_blank" 
                                class="btn btn-sm btn-dark mt-2">
                                 <i class="fas fa-external-link-alt me-1"></i> Open PDF
                             </a>
@@ -137,7 +137,7 @@
 
                                 <!-- Download Button -->
                                 <div class="w-full sm:w-auto">
-                                    <a href="{{ asset('storage/' . $post->file_path) }}" target="_blank"
+                                    <a href="{{ asset($post->file_path) }}" target="_blank"
                                     class="inline-flex justify-center items-center w-full sm:w-auto px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-xl hover:bg-blue-700 transition">
                                         <i class="fas fa-download mr-2"></i> Download
                                     </a>

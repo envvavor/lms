@@ -1,2 +1,4 @@
 User-agent: *
-Disallow:
+Allow: /
+
+Sitemap: https://lms.sekolahadvertiser.com/sitemap.xml

@@ -76,10 +76,13 @@ class PostController extends Controller
         ];
 
         if ($request->hasFile('file')) {
-            $file     = $request->file('file');
+            $file = $request->file('file');
             $fileName = time() . '_' . $file->getClientOriginalName();
-            $filePath = $file->storeAs('posts', $fileName, 'public');
-            $data['file_path'] = $filePath;
+        
+            // simpan langsung ke public/uploads
+            $file->move(public_path('uploads/posts'), $fileName);
+        
+            $data['file_path'] = 'uploads/posts/' . $fileName;
         }
 
         Post::create($data);
@@ -131,40 +134,46 @@ class PostController extends Controller
             return redirect()->route('courses.show', $post->course)
                 ->with('error', 'You do not have permission to edit this post.');
         }
-
+    
         $request->validate([
             'title'   => 'required|string|max:255',
             'content' => 'nullable|string',
             'file'    => 'nullable|file|max:30000',
             'link'    => 'nullable|url',
         ]);
-
+    
         if (!$request->content && !$request->hasFile('file') && !$post->file_path) {
             return back()->withErrors(['content' => 'Content or File is required.']);
         }
-
+    
         $data = [
             'title'   => $request->title,
             'content' => $request->content,
             'link'    => $request->link,
         ];
-
+    
         if ($request->hasFile('file')) {
             // hapus file lama kalau ada
             if ($post->file_path) {
-                Storage::disk('public')->delete($post->file_path);
+                $oldFile = public_path($post->file_path);
+                if (file_exists($oldFile)) {
+                    unlink($oldFile);
+                }
             }
-
+    
+            // simpan file baru
             $file     = $request->file('file');
             $fileName = time() . '_' . $file->getClientOriginalName();
-            $filePath = $file->storeAs('posts', $fileName, 'public');
-            $data['file_path'] = $filePath;
+            $file->move(public_path('uploads/posts'), $fileName);
+    
+            $data['file_path'] = 'uploads/posts/' . $fileName;
         }
-
+    
         $post->update($data);
-
+    
         return redirect()->route('courses.show', $post->course)->with('success', 'Post updated successfully!');
     }
+
 
 
     /**
@@ -178,7 +187,10 @@ class PostController extends Controller
         }
         
         if ($post->file_path) {
-            Storage::disk('public')->delete($post->file_path);
+            $filePath = public_path($post->file_path);
+            if (file_exists($filePath)) {
+                unlink($filePath);
+            }
         }
         
         $course = $post->course;

@@ -99,23 +99,19 @@ class EnrollmentController extends Controller
 
     public function removeEnrollment(Course $course, $enrollmentId)
     {
-        // Only course owner or admin can remove enrollments
         if (!Auth::user()->canManageCourse($course)) {
             return redirect()->route('courses.show', $course)
                 ->with('error', 'You do not have permission to manage enrollments for this course.');
         }
-
-        $enrollment = CourseEnrollment::findOrFail($enrollmentId);
-
-        // Ensure the enrollment belongs to this course
-        if ($enrollment->course_id !== $course->id) {
-            return redirect()->route('courses.enrollments', $course)
-                ->with('error', 'Invalid enrollment for this course.');
-        }
-
+    
+        $enrollment = CourseEnrollment::where('id', $enrollmentId)
+            ->where('course_id', $course->id)
+            ->firstOrFail();
+    
         $enrollment->delete();
-
+    
         return redirect()->route('courses.enrollments', $course)
             ->with('success', 'Student removed from the course.');
     }
+
 }
