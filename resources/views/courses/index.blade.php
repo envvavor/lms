@@ -172,30 +172,33 @@
 </div>
 
 <!-- Statistics Cards -->
+<!-- i make it only admin or teacher can see it -->
 @auth
-<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-6 over">
-    <div class="bg-[#2b2738] rounded-xl shadow p-6 text-center" style="border-left: 6px solid #ffa800;">
-        <div class="text-3xl font-bold text-white">
-            {{ method_exists($courses, 'total') ? $courses->total() : $courses->count() }}
+    @if (Auth::user()->canCreateCourses())
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-6 over">
+            <div class="bg-[#2b2738] rounded-xl shadow p-6 text-center" style="border-left: 6px solid #ffa800;">
+                <div class="text-3xl font-bold text-white">
+                    {{ method_exists($courses, 'total') ? $courses->total() : $courses->count() }}
+                </div>
+                <p class="text-white text-sm">Total Courses</p>
+            </div>
+
+            <div class="bg-[#2b2738] rounded-xl shadow p-6 text-center text-white" style="border-left: 6px solid #ffa800;">
+                <div class="text-3xl font-bold">{{ Auth::user()->enrolledCourses()->count() }}</div>
+                <p class="text-sm">Enrolled Courses</p>
+            </div>
+
+            <div class="bg-[#2b2738] rounded-xl shadow p-6 text-center text-white" style="border-left: 6px solid #ffa800;">
+                <div class="text-3xl font-bold">{{ Auth::user()->courses()->count() }}</div>
+                <p class="text-sm">My Courses</p>
+            </div>
+
+            <div class="bg-[#2b2738] rounded-xl shadow p-6 text-center text-white" style="border-left: 6px solid #ffa800;">
+                <div class="text-3xl font-bold">{{ App\Models\Post::count() }}</div>
+                <p class="text-sm">Total Posts</p>
+            </div>
         </div>
-        <p class="text-white text-sm">Total Courses</p>
-    </div>
-
-    <div class="bg-[#2b2738] rounded-xl shadow p-6 text-center text-white" style="border-left: 6px solid #ffa800;">
-        <div class="text-3xl font-bold">{{ Auth::user()->enrolledCourses()->count() }}</div>
-        <p class="text-sm">Enrolled Courses</p>
-    </div>
-
-    <div class="bg-[#2b2738] rounded-xl shadow p-6 text-center text-white" style="border-left: 6px solid #ffa800;">
-        <div class="text-3xl font-bold">{{ Auth::user()->courses()->count() }}</div>
-        <p class="text-sm">My Courses</p>
-    </div>
-
-    <div class="bg-[#2b2738] rounded-xl shadow p-6 text-center text-white" style="border-left: 6px solid #ffa800;">
-        <div class="text-3xl font-bold">{{ App\Models\Post::count() }}</div>
-        <p class="text-sm">Total Posts</p>
-    </div>
-</div>
+    @endif
 @endauth
 
 <!-- Courses Grid -->
