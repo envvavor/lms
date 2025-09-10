@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Register - LMS Pro')
+@section('title', 'Register - Creativy LMS')
 
 @section('content')
 <script src="https://cdn.tailwindcss.com"></script>
@@ -25,7 +25,7 @@
             </div>
             <div class="relative z-10"></div>
             <div class="relative z-10 bottom-10 left-8 text-white">
-                <h2 class="text-2xl font-semibold">Join LMS Pro</h2>
+                <h2 class="text-2xl font-semibold">Join Creativy LMS</h2>
                 <p class="text-gray-400 mt-1">Create an account to get started</p>
             </div>
         </div>

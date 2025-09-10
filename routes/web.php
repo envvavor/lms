@@ -12,12 +12,29 @@ use App\Models\Course;
 //     return redirect()->route('courses.index');
 // });
 
+Route::view('/welcome', 'welcome')->name('welcome');
 
+
+Route::get('/kelas', function () {
+    $courses = Course::with('user')->latest()->take(6)->get(); 
+    return view('kelas', compact('courses'));
+})->name('kelas');
+
+Route::get('/tentang', function () {
+    return view('tentang');
+});
 
 Route::get('/', function () {
-    $courses = Course::with('user')->latest()->take(6)->get(); 
-    return view('welcome', compact('courses'));
-})->name('welcome');
+    return view('home');
+});
+
+Route::get('/lokasi', function () {
+    return view('lokasi');
+});
+
+Route::get('/galeri_kami', function () {
+    return view('galeri_kami');
+});
 
 Route::view('/privacy-policy', 'privacy-policy')->name('privacy.policy');
 

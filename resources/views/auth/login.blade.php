@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Login - LMS Pro')
+@section('title', 'Login - Creativy LMS')
 
 @section('content')
 <script src="https://cdn.tailwindcss.com"></script>
@@ -128,7 +128,7 @@
         <!-- Right Side (Login Form) -->
         <div class="flex items-center justify-center p-8">
             <div class="w-full max-w-md space-y-6">
-                <a href="{{ route('welcome') }}" class="text-white">
+                <a href="{{ route('home') }}" class="text-white">
                   <i class="fas fa-arrow-left text-white"></i> Back To Home
                 </a>
                 <h2 class="text-2xl font-bold text-white">Log in to your account</h2>
