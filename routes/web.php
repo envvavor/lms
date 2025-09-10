@@ -24,9 +24,7 @@ Route::get('/tentang', function () {
     return view('tentang');
 });
 
-Route::get('/', function () {
-    return view('home');
-});
+Route::view('/', 'home')->name('home');
 
 Route::get('/lokasi', function () {
     return view('lokasi');
