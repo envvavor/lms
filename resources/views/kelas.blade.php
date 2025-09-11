@@ -123,7 +123,9 @@
     <!-- Kelas Section -->
     <section class="max-w-6xl mx-auto px-4 md:px-8 py-16">
         <div class="bg-gradient-to-br from-gray-800 via-gray-900 to-black rounded-3xl p-8 md:p-12 shadow-2xl">
-            <div class="text-center mb-12">
+            <div class="text-center mb-12"
+            data-aos="fade-down"
+            data-aos-duration="1000">
                 <h2 class="text-3xl md:text-4xl font-extrabold text-white mb-4 section-title mx-auto">Kelas</h2>
                 <p class="text-gray-300 text-lg max-w-3xl mx-auto mt-6">Daftar kelas pelatihan terbaru yang akan segera dimulai. Segera daftar sebelum kehabisan seat!</p>
             </div>
@@ -147,7 +149,11 @@
                 @empty
                     <p class="text-center text-gray-500 col-span-3">No classes available yet.</p>
                 @endforelse
-
+            </div>
+            <div class="mt-8 text-center" data-aos="zoom-in" data-aos-duration="1000">
+                <button class="inline-block text-sm text-white bg-yellow-500 px-4 py-2 rounded-lg hover:bg-yellow-700">
+                    <a href="{{ route('courses.all') }}">See all Class available</a>
+                </button>
             </div>
         </div>
     </section>
@@ -173,7 +179,7 @@
     </footer>
     <script src="https://unpkg.com/aos@2.3.4/dist/aos.js"></script>
     <script>
-    AOS.init();
+    AOS.init({once: true});
     </script>
 
 </body>
