@@ -486,12 +486,11 @@
     <footer class="bg-black py-10">
         <div class="max-w-7xl mx-auto px-8 md:px-8">
             <div class="flex flex-col md:flex-row justify-between items-center">
-                <div class="text-center md:text-left mb-6 md:mb-0">
-                    <div class="text-2xl font-extrabold text-[#f9a400] flex items-center justify-center md:justify-start">
-                        <i class="fas fa-ad mr-2"></i>
-                        ADS
+                <div class="text-center md:text-left mb-4 md:mb-0">
+                    <div class="text-2xl font-extrabold text-[#f9a400] flex justify-center md:justify-start items-center">
+                        <img src="/images/logo-white.png" alt="" class="max-h-5 sm:max-h-8 mr-2">
                     </div>
-                    <p class="text-gray-400 text-sm mt-2">© 2025 Pelatihan Iklan Digital. All rights reserved.</p>
+                    <p class="text-gray-400 text-sm mt-1">© 2025 Creativy LMS. All rights reserved.</p>
                 </div>
                 <ul class="flex flex-wrap justify-center md:justify-end space-x-6 md:space-x-8 text-sm font-medium">
                     <li><a href="/" class="text-gray-300 hover:text-[#f9a400] transition flex items-center nav-link"><i class="fas fa-home mr-2 text-sm"></i> Beranda</a></li>

@@ -38,12 +38,12 @@
     <!-- Navbar -->
     <nav class="sticky top-0 z-50 bg-black/90 backdrop-blur shadow-md">
         <div class="max-w-7xl mx-auto flex justify-between items-center px-6 py-4">
-            <div class="text-white bg-[#f9a400] px-4 py-2 rounded-xl font-extrabold text-lg tracking-wider shadow flex items-center">
-                <i class="fas fa-ad mr-2"></i> Creativy
+            <div class="px-4 py-2 rounded-xl font-extrabold text-lg tracking-wider shadow flex items-center">
+                <img src="/images/logo-white.png" alt="" class="max-h-5 sm:max-h-8 mr-2">
             </div>
             <!-- Desktop Menu -->
             <ul class="hidden md:flex space-x-8 font-medium">
-                <li><a href="/" class="text-white hover:text-[#f9a400] transition py-2">Beranda</a></li>
+                <li><a href="/" class="text-[#f9a400] transition py-2">Beranda</a></li>
                 <li><a href="/tentang" class="text-white hover:text-[#f9a400] transition py-2">Tentang</a></li>
                 <li><a href="/kelas" class="text-white hover:text-[#f9a400] transition py-2">Kelas</a></li>
                 <li><a href="/lokasi" class="text-white hover:text-[#f9a400] transition py-2">Lokasi</a></li>
