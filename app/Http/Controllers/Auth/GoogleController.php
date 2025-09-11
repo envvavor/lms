@@ -46,7 +46,7 @@ class GoogleController extends Controller
                 }
             }
 
-            Auth::login($user,)->remember(true);
+            Auth::login($user,true);
 
             return redirect()->intended('/courses')->with('success', 'You have successfully logged in with Google.');
         } catch (\Exception $e) {
