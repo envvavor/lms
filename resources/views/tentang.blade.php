@@ -7,6 +7,8 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     <link rel="icon" href="{{ asset('logo-web.png') }}" type="image/x-icon"> 
     <style>
         body {
@@ -267,13 +269,13 @@
         
         <!-- Statistik Section -->
         <section class="max-w-6xl mx-auto px-4 md:px-8 py-12">
-            <div class="text-center mb-12">
+            <div data-aos="fade-up" data-aos-duration="1000" class="text-center mb-12">
                 <h2 class="text-3xl md:text-4xl font-extrabold text-gray-800 mb-4 section-title mx-auto">Pencapaian Kami</h2>
                 <p class="text-gray-600 text-lg max-w-2xl mx-auto">Berikut adalah statistik peserta yang telah bergabung dan sukses dengan program pelatihan kami</p>
             </div>
             
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-                <div class="stat-card p-6 text-center">
+                <div data-aos="fade-up" data-aos-duration="1000" class="stat-card p-6 text-center">
                     <div class="icon-container mx-auto">
                         <svg class="w-6 h-6 text-[#f9a400]" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
@@ -283,7 +285,7 @@
                     <div class="text-gray-700 text-base font-medium">Peserta Belajar<br><span class="text-[#f9a400] font-semibold">Facebook Ads</span></div>
                 </div>
                 
-                <div class="stat-card p-6 text-center">
+                <div data-aos="fade-up" data-aos-duration="1200" class="stat-card p-6 text-center">
                     <div class="icon-container mx-auto">
                         <svg class="w-6 h-6 text-[#f9a400]" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                             <rect x="2" y="2" width="20" height="20" rx="5" ry="5"/>
@@ -295,7 +297,7 @@
                     <div class="text-gray-700 text-base font-medium">Peserta Belajar<br><span class="text-[#f9a400] font-semibold">Instagram Ads</span></div>
                 </div>
                 
-                <div class="stat-card p-6 text-center">
+                <div data-aos="fade-up" data-aos-duration="1400" class="stat-card p-6 text-center">
                     <div class="icon-container mx-auto">
                         <svg class="w-6 h-6 text-[#f9a400]" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                             <path d="M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.38 8.38 0 01-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.38 8.38 0 013.8-.9h.5a8.48 8.48 0 018 8v.5z"/>
@@ -305,7 +307,7 @@
                     <div class="text-gray-700 text-base font-medium">Peserta Belajar<br><span class="text-[#f9a400] font-semibold">Customer Service</span></div>
                 </div>
                 
-                <div class="stat-card p-6 text-center">
+                <div data-aos="fade-up" data-aos-duration="1600" class="stat-card p-6 text-center">
                     <div class="icon-container mx-auto">
                         <svg class="w-6 h-6 text-[#f9a400]" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                             <path d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4"/>
@@ -318,7 +320,7 @@
         </section>
 
         <!-- Tentang Kami Section -->
-        <section class="max-w-6xl mx-auto px-4 md:px-8 py-12">
+        <section data-aos="fade-up" data-aos-duration="1000" class="max-w-6xl mx-auto px-4 md:px-8 py-12">
             <div class="about-section p-8 md:p-12 flex flex-col md:flex-row items-center gap-10">
                 <div class="flex-1 space-y-6 relative z-10">
                     <div class="flex items-center gap-4 mb-4">
@@ -383,13 +385,13 @@
         
         <!-- Nilai-Nilai Kami Section -->
         <section class="max-w-6xl mx-auto px-4 md:px-8 py-16">
-            <div class="text-center mb-12">
+            <div data-aos="fade-up" data-aos-duration="1000" class="text-center mb-12">
                 <h2 class="text-3xl md:text-4xl font-extrabold text-gray-800 mb-4 section-title mx-auto">Nilai-Nilai Kami</h2>
                 <p class="text-gray-600 text-lg max-w-2xl mx-auto">Prinsip-prinsip yang menjadi pedoman dalam setiap program pelatihan kami</p>
             </div>
             
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                <div class="value-card">
+                <div data-aos="fade-up" data-aos-duration="1200" class="value-card">
                     <div class="value-icon mx-auto">
                         <svg class="w-8 h-8 text-[#f9a400]" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                             <path d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/>
@@ -399,7 +401,7 @@
                     <p class="text-gray-600 text-center">Selalu mengupdate materi sesuai perkembangan terbaru di dunia pemasaran digital</p>
                 </div>
                 
-                <div class="value-card">
+                <div data-aos="fade-up" data-aos-duration="1400" class="value-card">
                     <div class="value-icon mx-auto">
                         <svg class="w-8 h-8 text-[#f9a400]" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/>
@@ -409,7 +411,7 @@
                     <p class="text-gray-600 text-center">Membangun jaringan profesional yang saling mendukung dan berkolaborasi</p>
                 </div>
                 
-                <div class="value-card">
+                <div data-aos="fade-up" data-aos-duration="1600" class="value-card">
                     <div class="value-icon mx-auto">
                         <svg class="w-8 h-8 text-[#f9a400]" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"/>
@@ -424,7 +426,7 @@
     </div>
 
      <!-- Client Logo Section -->
-        <section class="max-w-6xl mx-auto px-4 md:px-8 py-8">
+        <section data-aos="fade-up" data-aos-duration="1000" class="max-w-6xl mx-auto px-4 md:px-8 py-8">
             <div class="client-section">
                 <div class="text-center mb-10">
                     <h2 class="text-3xl md:text-4xl font-extrabold text-gray-800 mb-4 section-title mx-auto">Klien Kami</h2>
@@ -475,5 +477,8 @@
             </div>
         </div>
     </footer>
+    <script>
+        AOS.init();
+    </script>
 </body>
 </html>

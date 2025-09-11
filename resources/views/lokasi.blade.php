@@ -217,13 +217,13 @@
     <!-- Lokasi Section -->
     <section class="w-full py-12 px-4 md:px-8">
         <div class="max-w-6xl mx-auto">
-            <div class="text-center mb-12">
+            <div data-aos="fade-up" data-aos-duration="1000" data-aos-delay="0" class="text-center mb-12">
                 <h2 class="text-4xl md:text-5xl font-bold text-[#333] mb-4 section-title">Lokasi Workshop Kami</h2>
                 <p class="text-lg text-gray-600 max-w-3xl mx-auto">Bantul Karang, Ringinharjo, Kec. Bantul, Kabupaten Bantul, Daerah Istimewa Yogyakarta</p>
             </div>
             
             <!-- Single Location Card - Horizontal Layout -->
-            <div class="relative location-card">
+            <div data-aos="fade-up" data-aos-duration="1000" data-aos-delay="200" class="relative location-card">
                 
                 <div class="info-container">
                     <div>
@@ -255,7 +255,7 @@
             </div>
             
             <!-- Additional Info Section -->
-            <div class="mt-16 bg-white rounded-2xl p-8 shadow-lg">
+            <div data-aos="fade-up" data-aos-duration="1000" class="mt-16 bg-white rounded-2xl p-8 shadow-lg">
                 <h3 class="text-2xl font-bold text-center mb-8 text-[#333]">Fasilitas Workshop Kami</h3>
                 <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
                     <div class="text-center p-4 rounded-xl bg-amber-50">
@@ -304,5 +304,11 @@
             </div>
         </div>
     </footer>
+
+    <link href="https://unpkg.com/aos@2.3.4/dist/aos.css" rel="stylesheet">
+    <script src="https://unpkg.com/aos@2.3.4/dist/aos.js"></script>
+    <script>
+        AOS.init();
+    </script>
 </body>
 </html>

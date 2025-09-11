@@ -326,7 +326,7 @@
                 <div class="gallery-grid">
                     <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
                         <!-- Gallery Item 1 -->
-                        <div class="gallery-item">
+                        <div data-aos="fade-up" data-aos-delay="0" data-aos-duration="600" class="gallery-item">
                             <div class="gallery-img-container">
                                 <img src="/images/1.png" alt="Sesi Pelatihan Intensif" class="gallery-img" />
                             </div>
@@ -345,7 +345,7 @@
                         </div>
                         
                         <!-- Gallery Item 2 -->
-                        <div class="gallery-item">
+                        <div data-aos="fade-up" data-aos-delay="100" data-aos-duration="600" class="gallery-item">
                             <div class="gallery-img-container">
                                 <img src="/images/2.png" alt="Diskusi Kelompok" class="gallery-img" />
                             </div>
@@ -364,7 +364,7 @@
                         </div>
                         
                         <!-- Gallery Item 3 -->
-                        <div class="gallery-item">
+                        <div data-aos="fade-up" data-aos-delay="200" data-aos-duration="600" class="gallery-item">
                             <div class="gallery-img-container">
                                 <img src="/images/3.png" alt="Presentasi Hasil" class="gallery-img" />
                             </div>
@@ -383,7 +383,7 @@
                         </div>
                         
                         <!-- Gallery Item 4 -->
-                        <div class="gallery-item">
+                        <div data-aos="fade-up" data-aos-delay="300" data-aos-duration="600" class="gallery-item">
                             <div class="gallery-img-container">
                                 <img src="/images/4.png" alt="Networking Session" class="gallery-img" />
                             </div>
@@ -402,7 +402,7 @@
                         </div>
                         
                         <!-- Gallery Item 5 -->
-                        <div class="gallery-item">
+                        <div data-aos="fade-up" data-aos-delay="400" data-aos-duration="600" class="gallery-item">
                             <div class="gallery-img-container">
                                 <img src="/images/13.png" alt="Coach Pendampingan" class="gallery-img" />
                             </div>
@@ -421,7 +421,7 @@
                         </div>
                         
                         <!-- Gallery Item 6 -->
-                        <div class="gallery-item">
+                        <div data-aos="fade-up" data-aos-delay="500" data-aos-duration="600" class="gallery-item">
                             <div class="gallery-img-container">
                                 <img src="/images/14.png" alt="Tools Demonstrasi" class="gallery-img" />
                             </div>
@@ -440,7 +440,7 @@
                         </div>
                         
                         <!-- Gallery Item 7 -->
-                        <div class="gallery-item">
+                        <div data-aos="fade-up" data-aos-delay="600" data-aos-duration="600" class="gallery-item">
                             <div class="gallery-img-container">
                                 <img src="/images/15.png" alt="Kelulusan Peserta" class="gallery-img" />
                             </div>
@@ -459,7 +459,7 @@
                         </div>
                         
                         <!-- Gallery Item 8 -->
-                        <div class="gallery-item">
+                        <div data-aos="fade-up" data-aos-delay="700" data-aos-duration="600" class="gallery-item">
                             <div class="gallery-img-container">
                                 <img src="/images/16.png" alt="Suasana Kelas" class="gallery-img" />
                             </div>
@@ -503,6 +503,13 @@
             </div>
         </div>
     </footer>
+    
+    <link href="https://unpkg.com/aos@2.3.4/dist/aos.css" rel="stylesheet">
+    <script src="https://unpkg.com/aos@2.3.4/dist/aos.js"></script>
+    <script>
+        AOS.init();
+    </script>
+
 
     <script>
         // Simple filter functionality for demonstration

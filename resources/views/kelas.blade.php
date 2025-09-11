@@ -7,6 +7,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://unpkg.com/aos@2.3.4/dist/aos.css" rel="stylesheet">
     <link rel="icon" href="{{ asset('logo-web.png') }}" type="image/x-icon"> 
     <style>
         body {
@@ -129,19 +130,24 @@
             <!-- Container untuk kartu kelas -->
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                 @forelse($courses as $course)
-                    <div class="bg-white rounded-2xl shadow-md p-6 hover:shadow-lg transition">
+                    <div class="bg-white rounded-2xl shadow-md p-6 hover:shadow-lg transition"
+                        data-aos="fade-up"
+                        data-aos-delay="{{ $loop->index * 100 }}"
+                        data-aos-duration="1000">
+                        
                         <h3 class="text-lg font-semibold text-black mb-2">{{ $course->name }}</h3>
                         <p class="text-gray-600 text-sm mb-4">
                             {{ Str::limit($course->description, 100) }}
                         </p>
                         <a href="{{ route('courses.show', $course) }}" 
-                           class="inline-block text-sm text-white bg-yellow-500 px-4 py-2 rounded-lg hover:bg-yellow-700">
-                           View Class
+                        class="inline-block text-sm text-white bg-yellow-500 px-4 py-2 rounded-lg hover:bg-yellow-700">
+                        View Class
                         </a>
                     </div>
                 @empty
                     <p class="text-center text-gray-500 col-span-3">No classes available yet.</p>
                 @endforelse
+
             </div>
         </div>
     </section>
@@ -166,5 +172,10 @@
             </div>
         </div>
     </footer>
+    <script src="https://unpkg.com/aos@2.3.4/dist/aos.js"></script>
+    <script>
+    AOS.init();
+    </script>
+
 </body>
 </html>
