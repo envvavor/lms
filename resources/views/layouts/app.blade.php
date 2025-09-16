@@ -581,12 +581,14 @@
                 </li>
             @endif
 
-            <li class="nav-item">
-                <a class="nav-link" href="#">
-                    <i class="fas fa-chart-bar"></i>
-                    <span class="nav-text">Analytics</span>
-                </a>
-            </li>
+            @if(Auth::user()->isAdmin())
+                <li class="nav-item">
+                    <a class="nav-link {{ request()->routeIs('analytics') ? 'active' : '' }}" href="{{ route('analytics') }}">
+                        <i class="fas fa-chart-bar"></i>
+                        <span class="nav-text">Analytics</span>
+                    </a>
+                </li>
+            @endif
 
             <li class="nav-item">
                 <a class="nav-link" href="#">
