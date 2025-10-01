@@ -15,6 +15,12 @@ class UserController extends Controller
      */
     public function index(Request $request)
     {
+
+        if (!Auth::user()->isAdmin()) {
+            return redirect()->route('courses.index')
+                ->with('error', 'You do not have permission to users.');
+        }
+
         $query = User::query();
 
         if ($request->filled('search')) {

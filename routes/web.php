@@ -77,7 +77,10 @@ Route::middleware(['auth'])->group(function () {
     // User management routes (admin only)
     Route::resource('users', UserController::class);
     
-    Route::view('/analytics', 'analytics')->name('analytics');
+    // Analytics view (admin only)
+    Route::view('/analytics', 'analytics')
+    ->middleware(['auth', 'can:view-analytics'])
+    ->name('analytics');
 
 });
 
