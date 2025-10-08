@@ -226,14 +226,20 @@
                                     {{-- Embed YouTube --}}
                                     @if (Str::contains($post->link, 'youtube.com') || Str::contains($post->link, 'youtu.be'))
                                         @php
-                                            preg_match('/(youtu\.be\/|v=)([^&]+)/', $post->link, $matches);
-                                            $youtubeId = $matches[2] ?? null;
+                                            // Ambil video ID dari berbagai bentuk URL (watch, live, youtu.be, embed)
+                                            preg_match('/(?:youtu\.be\/|v=|live\/|embed\/)([^?&]+)/', $post->link, $matches);
+                                            $youtubeId = $matches[1] ?? null;
                                         @endphp
+
                                         @if($youtubeId)
                                             <div class="relative w-full" style="padding-top: 56.25%;"> {{-- 16:9 ratio --}}
-                                                <iframe class="absolute top-0 left-0 w-full h-full rounded-lg shadow"
-                                                        src="https://www.youtube.com/embed/{{ $youtubeId }}" 
-                                                        frameborder="0" allowfullscreen></iframe>
+                                                <iframe 
+                                                    class="absolute top-0 left-0 w-full h-full rounded-lg shadow"
+                                                    src="https://www.youtube.com/embed/{{ $youtubeId }}" 
+                                                    frameborder="0"
+                                                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                                    allowfullscreen>
+                                                </iframe>
                                             </div>
                                         @endif
                                     @endif
