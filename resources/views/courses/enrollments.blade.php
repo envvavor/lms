@@ -38,11 +38,11 @@
         </h2>
         @if($availableUsers->count() > 0)
             <form action="{{ route('enrollments.add', $course) }}" method="POST" class="grid md:grid-cols-3 gap-4">
-                @csrf
+               @csrf
                 <div class="md:col-span-2">
                     <label for="user_id" class="text-sm font-medium">Select User</label>
-                    <select name="user_id" id="user_id" required 
-                        class="w-full mt-1 rounded-xl border-gray-300 shadow-sm focus:ring-2 focus:ring-primary p-2">
+                    <select name="user_id" id="user_id" required
+                        class="select2 w-full mt-1 rounded-xl border-gray-300 shadow-sm focus:ring-2 focus:ring-primary p-2">
                         <option value="">Choose a user to enroll...</option>
                         @foreach($availableUsers as $user)
                             <option value="{{ $user->id }}">
@@ -52,11 +52,11 @@
                     </select>
                 </div>
                 <div class="flex items-end">
-                    <button type="submit" class="w-full bg-primary text-white px-4 py-2 rounded-xl shadow hover:bg-primary/90 transition">
+                    <button type="submit"
+                        class="w-full bg-primary text-white px-4 py-2 rounded-xl shadow hover:bg-primary/90 transition">
                         <i class="fas fa-plus"></i> Add to Course
                     </button>
                 </div>
-            </form>
         @else
             <div class="text-center py-6">
                 <i class="fas fa-check-circle text-green-500 text-4xl mb-2"></i>
@@ -160,4 +160,26 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 </script>
+
+@push('scripts')
+    {{-- jQuery + Select2 CDN --}}
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
+    <script>
+        $(document).ready(function () {
+            $('#user_id').select2({
+                placeholder: "Search user...",
+                allowClear: true,
+                width: '100%',
+                dropdownAutoWidth: true,
+                dropdownCss: {
+                    'max-height': '200px',
+                    'overflow-y': 'auto'
+                }
+            });
+        });
+    </script>
+@endpush
 @endsection
