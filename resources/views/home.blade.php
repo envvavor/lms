@@ -201,7 +201,7 @@
         </div>
     </section>
     <footer class="bg-black text-white text-center p-4">
-        <a href="https://lms.sekolahadvertiser.com/privacy-policy">Privacy policy</a>
+        <a href="https://creativy-class.biz.id/privacy-policy">Privacy policy</a>
     </footer>
     
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
