@@ -14,6 +14,7 @@
     <script src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
     <!-- favicon -->
     <link rel="icon" href="{{ asset('logo-web.png') }}" type="image/x-icon"> 
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
 
     <script>

@@ -5,6 +5,10 @@
 @section('content')
 <script src="https://cdn.tailwindcss.com"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<!-- Add Select2 CSS & JS -->
+<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
 <div class="m-3 sm:m-5">
     <!-- Page Header -->
     <div class="bg-[#2b2738] text-white rounded-2xl shadow-lg p-6 mb-6">
@@ -42,7 +46,7 @@
                 <div class="md:col-span-2">
                     <label for="user_id" class="text-sm font-medium">Select User</label>
                     <select name="user_id" id="user_id" required 
-                        class="w-full mt-1 rounded-xl border-gray-300 shadow-sm focus:ring-2 focus:ring-primary p-2">
+                        class="w-full mt-1 rounded-xl border-gray-300 shadow-sm focus:ring-2 focus:ring-primary p-2 select2">
                         <option value="">Choose a user to enroll...</option>
                         @foreach($availableUsers as $user)
                             <option value="{{ $user->id }}">
@@ -157,6 +161,12 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
             });
         });
+    });
+
+    $('.select2').select2({
+        width: '100%',
+        placeholder: 'Choose a user to enroll...',
+        allowClear: true
     });
 });
 </script>
