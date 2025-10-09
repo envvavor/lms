@@ -58,7 +58,7 @@
     </section>
 
     <footer class="bg-gray-100 py-6 text-center">
-        <a href="https://lms.sekolahadvertiser.com/privacy-policy"
+        <a href="https://creativy-class.biz.id/privacy-policy"
            class="text-blue-600 hover:text-blue-800 hover:underline">
            Privacy Policy
         </a>
