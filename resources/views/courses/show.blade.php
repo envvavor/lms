@@ -5,6 +5,13 @@
 @section('content')
 <script src="https://cdn.tailwindcss.com"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+@php
+    $user = Auth::user();
+    // We'll evaluate per-post "previousPost" and "isUnlocked" inside the posts loop
+    $user = Auth::user();
+@endphp
+
 <div class="m-3 sm:m-5 animate-slide-up">
 
     <!-- Page Header -->
@@ -33,6 +40,8 @@
                     </span>
                 </div>
             </div>
+            
+
 
             <!-- Action Buttons -->
             <div class="col-lg-4 col-md-12 text-lg-end text-md-start mt-4 mt-lg-0">
@@ -69,6 +78,26 @@
                 @endauth
             </div>
         </div>
+        <div class="bg-[#2b2738] text-white mt-4">
+            <div class="flex justify-between items-center mb-2">
+                <h5 class="flex items-center gap-2 text-lg font-semibold">
+                    <i class="fas fa-chart-line"></i>
+                    Course Progress
+                </h5>
+                <span class="text-sm text-gray-300">{{ $progress }}%</span>
+            </div>
+
+            <div class="w-full bg-gray-700 rounded-full h-3 overflow-hidden mt-2">
+                <div
+                    class="bg-gradient-to-r from-orange-500 to-orange-600 h-3 rounded-full transition-all duration-500"
+                    style="width: {{ $progress }}%">
+                </div>
+            </div>
+
+            <p class="mt-3 text-sm text-gray-300">
+                You’ve viewed <span class="font-semibold text-white">{{ $progress }}%</span> of the course content.
+            </p>
+        </div>
     </div>
 
     <!-- Course Content -->
@@ -84,46 +113,63 @@
                 </div>
                 <div class="card-body bg-white rounded-b-2xl">
                     @if($course->posts->count() > 0)
-                        @foreach($course->posts as $post)
-                            <div class="p-3 mb-4 border rounded-xl shadow-sm bg-light">
-                                <div class="d-flex justify-content-between align-items-start mb-2">
-                                    <div>
-                                        @php
-                                            $icons = [
-                                                'text' => 'fa-file-alt',
-                                                'image' => 'fa-file-image',
-                                                'video' => 'fa-file-video',
-                                                'link' => 'fa-link',
-                                                'other' => 'fa-paperclip'
-                                            ];
-                                            $icon = $icons[$post->type] ?? 'fa-file';
-                                        @endphp
+                        @foreach($course->posts as $index => $post)
+                            @php
+                                $isUnlocked = $index === 0 || 
+                                    \App\Models\PostView::where('user_id', Auth::id())
+                                        ->where('post_id', $course->posts[$index - 1]->id ?? null)
+                                        ->exists();
 
-                                        <h5 class="fw-bold text-[#2b2738]">
-                                            <i class="fas {{ $icon }} me-2 text-primary"></i>
+                                $icons = [
+                                    'text' => 'fa-file-alt',
+                                    'image' => 'fa-file-image',
+                                    'video' => 'fa-file-video',
+                                    'link' => 'fa-link',
+                                    'other' => 'fa-paperclip'
+                                ];
+                                $icon = $icons[$post->type] ?? 'fa-file';
+                            @endphp
+
+                            <div class="relative card shadow-sm border-0 mb-4 p-4 rounded-2xl transition hover:shadow-md">
+
+                                {{-- TOP BAR (Title + Dropdown) --}}
+                                <div class="flex justify-between items-start mb-2">
+                                    <h5 class="fw-bold text-[#2b2738] flex items-center gap-2">
+                                        <i class="fas {{ $icon }} text-primary"></i>
+                                        @if($isUnlocked)
                                             <a href="{{ route('posts.show', $post) }}" class="hover:text-blue-500">{{ $post->title }}</a>
-                                        </h5>
-                                        <small class="text-muted">
-                                            <i class="fas fa-user me-1"></i>{{ $post->user->name }} • 
-                                            <i class="fas fa-calendar me-1"></i>{{ $post->created_at->format('M d, Y H:i') }}
-                                        </small>
-                                    </div>
+                                        @else
+                                            <span class="text-gray-400">
+                                                <i class="fas fa-lock me-1"></i> {{ $post->title }}
+                                            </span>
+                                        @endif
+                                    </h5>
+
+                                    {{-- Dropdown on top-right --}}
                                     @auth
                                         @if(Auth::user()->canManageCourse($course))
                                             <div class="dropdown">
-                                                <button class="btn btn-sm btn-outline-secondary dropdown-toggle" data-bs-toggle="dropdown">
-                                                    <i class="fas fa-ellipsis-v"></i>
+                                                <button class="btn btn-light btn-sm rounded-circle shadow-sm" data-bs-toggle="dropdown" aria-expanded="false">
+                                                    <i class="fas fa-ellipsis-v text-gray-600"></i>
                                                 </button>
-                                                <ul class="dropdown-menu">
-                                                    <li><a class="dropdown-item" href="{{ route('posts.show', $post) }}"><i class="fas fa-eye me-2"></i> View</a></li>
-                                                    <li><a class="dropdown-item" href="{{ route('posts.edit', $post) }}"><i class="fas fa-edit me-2"></i> Edit</a></li>
+                                                <ul class="dropdown-menu dropdown-menu-end">
+                                                    <li>
+                                                        <a class="dropdown-item" href="{{ route('posts.show', $post) }}">
+                                                            <i class="fas fa-eye me-2"></i> View
+                                                        </a>
+                                                    </li>
+                                                    <li>
+                                                        <a class="dropdown-item" href="{{ route('posts.edit', $post) }}">
+                                                            <i class="fas fa-edit me-2"></i> Edit
+                                                        </a>
+                                                    </li>
                                                     <li><hr class="dropdown-divider"></li>
                                                     <li>
                                                         <form action="{{ route('posts.destroy', $post) }}" method="POST" class="d-inline">
                                                             @csrf @method('DELETE')
-                                                            <button type="button" 
-                                                                    class="dropdown-item text-danger btn-delete-post"
-                                                                    data-post-title="{{ $post->title }}">
+                                                            <button type="button"
+                                                                class="dropdown-item text-danger btn-delete-post"
+                                                                data-post-title="{{ $post->title }}">
                                                                 <i class="fas fa-trash me-2"></i> Delete
                                                             </button>
                                                         </form>
@@ -133,137 +179,114 @@
                                         @endif
                                     @endauth
                                 </div>
-                                <p class="text-muted mb-2">{{ Str::limit($post->content, 200) }}</p>
-                                <!-- File Attachment -->
-                                @php
-                                    $filename = basename($post->file_path);
-                                    $cleanName = explode("_", $filename, 2)[1] ?? $filename;
-                                @endphp
-                                @if($post->file_path)
-                                    <div class="mb-3">
+
+                                {{-- Post Info --}}
+                                <small class="text-muted d-block mb-2">
+                                    <i class="fas fa-user me-1"></i>{{ $post->user->name }} • 
+                                    <i class="fas fa-calendar me-1"></i>{{ $post->created_at->format('M d, Y H:i') }}
+                                </small>
+
+                                {{-- Content --}}
+                                @if ($isUnlocked)
+                                    <p class="text-muted mb-3">{{ Str::limit($post->content, 200) }}</p>
+
+                                    {{-- File Preview --}}
+                                    @if($post->file_path)
                                         @php
+                                            $filename = basename($post->file_path);
+                                            $cleanName = explode("_", $filename, 2)[1] ?? $filename;
                                             $ext = pathinfo($post->file_path, PATHINFO_EXTENSION);
                                         @endphp
 
                                         @if(in_array($ext, ['jpg','jpeg','png','gif','webp']))
-                                            <!-- Image preview -->
-                                            <img src="{{ asset($post->file_path) }}" alt="Attachment"
-                                                class="rounded-lg shadow max-h-64 object-cover">
-                                        
+                                            <img src="{{ asset($post->file_path) }}" alt="Attachment" class="rounded-lg shadow max-h-64 object-cover">
                                         @elseif(in_array($ext, ['mp4','webm','ogg']))
-                                            <!-- Video preview -->
                                             <video controls class="w-full rounded-lg shadow">
                                                 <source src="{{ asset($post->file_path) }}" type="video/{{ $ext }}">
-                                                Your browser does not support the video tag.
                                             </video>
-                                        
-                                        @elseif(in_array($ext, ['pdf', ]))
-                                            <!-- PDF embed -->
-                                            <!-- <iframe src="{{ asset('storage/' . $post->file_path) }}" class="w-full h-64 rounded-lg"></iframe> -->
-                                            <!-- <a href="{{ asset('storage/' . $post->file_path) }}" target="_blank" 
-                                            class="text-blue-600 underline text-sm">Open PDF</a> -->
-                                            <!-- File Attachment Card -->
-                                            <!-- File Attachment Card Responsive -->
-                                            <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between w-full bg-white border border-gray-200 rounded-2xl shadow-sm p-4 mb-3 hover:shadow-md transition gap-3">
-
-                                                <!-- File Info -->
-                                                <div class="flex items-center space-x-3 w-full sm:w-auto">
-                                                    <div class="flex items-center justify-center w-12 h-12 bg-blue-100 text-blue-600 rounded-xl shrink-0">
-                                                        <i class="fas fa-paperclip text-lg"></i>
+                                        @elseif($ext === 'docx' || $ext === 'doc')
+                                            <div class="flex items-center justify-between bg-gray-50 border rounded-2xl p-3 mt-2">
+                                                <div class="flex items-center gap-3">
+                                                    <div class="w-10 h-10 flex items-center justify-center bg-blue-100 text-blue-600 rounded-xl">
+                                                        <i class="fas fa-paperclip"></i>
                                                     </div>
-                                                    <div class="min-w-0">
-                                                        <p class="text-gray-800 font-medium truncate">
-                                                            {{ $cleanName }}
-                                                        </p>
-                                                        <p class="text-sm text-gray-500">Attachment File</p>
+                                                    <div>
+                                                        <p class="font-medium text-gray-800">{{ $cleanName }}</p>
+                                                        <p class="text-sm text-gray-500">Word Document</p>
                                                     </div>
                                                 </div>
-
-                                                <!-- Download Button -->
-                                                <div class="w-full sm:w-auto">
-                                                    <a href="{{ asset($post->file_path) }}" target="_blank"
-                                                    class="inline-flex justify-center items-center w-full sm:w-auto px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-xl hover:bg-blue-700 transition">
-                                                        <i class="fas fa-eye mr-2"></i> Open PDF
-                                                    </a>
-                                                </div>
+                                                <a href="{{ asset($post->file_path) }}" target="_blank"
+                                                class="inline-flex justify-center items-center w-full sm:w-auto px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-xl hover:bg-blue-700 transition">
+                                                    <i class="fas fa-download mr-2"></i> Download
+                                                </a>
                                             </div>
-                                        @else
-                                            <!-- File Attachment Card Responsive -->
-                                            <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between w-full bg-white border border-gray-200 rounded-2xl shadow-sm p-4 mb-3 hover:shadow-md transition gap-3">
-
-                                                <!-- File Info -->
-                                                <div class="flex items-center space-x-3 w-full sm:w-auto">
-                                                    <div class="flex items-center justify-center w-12 h-12 bg-blue-100 text-blue-600 rounded-xl shrink-0">
-                                                        <i class="fas fa-paperclip text-lg"></i>
+                                        @elseif($ext === 'pdf')
+                                            <div class="flex items-center justify-between bg-gray-50 border rounded-2xl p-3 mt-2">
+                                                <div class="flex items-center gap-3">
+                                                    <div class="w-10 h-10 flex items-center justify-center bg-blue-100 text-blue-600 rounded-xl">
+                                                        <i class="fas fa-paperclip"></i>
                                                     </div>
-                                                    <div class="min-w-0">
-                                                        <p class="text-gray-800 font-medium truncate">
-                                                            {{ $cleanName }}
-                                                        </p>
-                                                        <p class="text-sm text-gray-500">Attachment File</p>
+                                                    <div>
+                                                        <p class="font-medium text-gray-800">{{ $cleanName }}</p>
+                                                        <p class="text-sm text-gray-500">PDF Document</p>
                                                     </div>
                                                 </div>
-
-                                                <!-- Download Button -->
-                                                <div class="w-full sm:w-auto">
-                                                    <a href="{{ asset($post->file_path) }}" target="_blank"
-                                                    class="inline-flex justify-center items-center w-full sm:w-auto px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-xl hover:bg-blue-700 transition">
-                                                        <i class="fas fa-download mr-2"></i> Download
-                                                    </a>
-                                                </div>
+                                                <a href="{{ asset($post->file_path) }}" target="_blank"
+                                                class="inline-flex justify-center items-center w-full sm:w-auto px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-xl hover:bg-blue-700 transition">
+                                                    <i class="fas fa-eye mr-2"></i> Open
+                                                </a>
                                             </div>
                                         @endif
+                                    @endif
+
+                                    {{-- Embed links --}}
+                                    @if($post->link)
+                                        @if(Str::contains($post->link, ['youtube.com', 'youtu.be']))
+                                            @php
+                                                preg_match('/(?:youtu\.be\/|v=|live\/|embed\/)([^?&]+)/', $post->link, $matches);
+                                                $youtubeId = $matches[1] ?? null;
+                                            @endphp
+                                            @if($youtubeId)
+                                                <div class="relative w-full mt-3" style="padding-top: 56.25%;">
+                                                    <iframe class="absolute top-0 left-0 w-full h-full rounded-lg shadow"
+                                                        src="https://www.youtube.com/embed/{{ $youtubeId }}" frameborder="0" allowfullscreen></iframe>
+                                                </div>
+                                            @endif
+                                        @elseif(Str::contains($post->link, 'drive.google.com'))
+                                            @php
+                                                preg_match('/\/d\/(.*?)(\/|$)/', $post->link, $matches);
+                                                $driveId = $matches[1] ?? null;
+                                            @endphp
+                                            @if($driveId)
+                                                <div class="relative w-full mt-3" style="padding-top: 56.25%;">
+                                                    <iframe class="absolute top-0 left-0 w-full h-full rounded-lg shadow"
+                                                        src="https://drive.google.com/file/d/{{ $driveId }}/preview"></iframe>
+                                                </div>
+                                            @endif
+                                        @endif
+                                    @endif
+
+                                    <a href="{{ route('posts.show', $post) }}" class="btn btn-outline-dark btn-sm rounded-pill mt-3">
+                                        <i class="fas fa-eye me-1"></i> View Full
+                                    </a>
+
+                                @else
+                                    {{-- Locked Card Design --}}
+                                    <div class="relative flex flex-col justify-center items-center py-5 rounded-2xl bg-gradient-to-r from-gray-100 to-gray-200 text-center overflow-hidden">
+                                        <div class="absolute inset-0 bg-gray-500/30 backdrop-blur-sm rounded-2xl"></div>
+                                        <div class="relative z-10 flex flex-col items-center">
+                                            <div class="bg-gray-700 text-white w-14 h-14 flex items-center justify-center rounded-full shadow mb-3">
+                                                <i class="fas fa-lock fa-lg"></i>
+                                            </div>
+                                            <h6 class="text-gray-800 font-semibold mb-1">Locked Content</h6>
+                                            <p class="text-gray-600 text-sm">Complete the previous post to unlock this section.</p>
+                                        </div>
                                     </div>
                                 @endif
-                                @if ($post->link)
-                                    <!-- <div class="mt-3">
-                                        <strong>Link:</strong> 
-                                        <a href="{{ $post->link }}" target="_blank" class="text-primary">
-                                            {{ $post->link }}
-                                        </a>
-                                    </div> -->
-
-                                    {{-- Embed YouTube --}}
-                                    @if (Str::contains($post->link, 'youtube.com') || Str::contains($post->link, 'youtu.be'))
-                                        @php
-                                            // Ambil video ID dari berbagai bentuk URL (watch, live, youtu.be, embed)
-                                            preg_match('/(?:youtu\.be\/|v=|live\/|embed\/)([^?&]+)/', $post->link, $matches);
-                                            $youtubeId = $matches[1] ?? null;
-                                        @endphp
-
-                                        @if($youtubeId)
-                                            <div class="relative w-full" style="padding-top: 56.25%;"> {{-- 16:9 ratio --}}
-                                                <iframe 
-                                                    class="absolute top-0 left-0 w-full h-full rounded-lg shadow"
-                                                    src="https://www.youtube.com/embed/{{ $youtubeId }}" 
-                                                    frameborder="0"
-                                                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                                                    allowfullscreen>
-                                                </iframe>
-                                            </div>
-                                        @endif
-                                    @endif
-
-                                    {{-- Embed Google Drive --}}
-                                    @if (Str::contains($post->link, 'drive.google.com'))
-                                        @php
-                                            preg_match('/\/d\/(.*?)(\/|$)/', $post->link, $matches);
-                                            $driveId = $matches[1] ?? null;
-                                        @endphp
-                                        @if($driveId)
-                                            <div class="relative w-full" style="padding-top: 56.25%;"> {{-- 16:9 ratio --}}
-                                                <iframe class="absolute top-0 left-0 w-full h-full rounded-lg shadow"
-                                                        src="https://drive.google.com/file/d/{{ $driveId }}/preview" 
-                                                        allow="autoplay"></iframe>
-                                            </div>
-                                        @endif
-                                    @endif
-                                @endif
-                                <a href="{{ route('posts.show', $post) }}" class="btn btn-outline-dark btn-sm rounded-pill mt-3">
-                                    <i class="fas fa-eye me-1"></i> View Full
-                                </a>
                             </div>
                         @endforeach
+
+
                     @else
                         <div class="text-center py-5 text-muted">
                             <i class="fas fa-ban fa-2x mb-2"></i>

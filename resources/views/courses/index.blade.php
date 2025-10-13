@@ -307,7 +307,7 @@
                         </div>
                     </div>
 
-                    <!-- Course Info -->
+                    <!-- Course Info
                     <div class="mt-auto">
                         <div class="flex items-center justify-between text-sm text-gray-500 bg-gray-50 rounded-lg px-3 py-2 border border-gray-100">
                             <span class="flex items-center">
@@ -316,6 +316,19 @@
                             </span>
                             <div class="w-2 h-2 bg-indigo-300 rounded-full"></div>
                         </div>
+                    </div> -->
+                    <div class="">
+                        <h5 class="text-sm font-semibold text-gray-700 flex items-center gap-2">
+                            <!-- <i class="fas fa-chart-line text-black"></i> Course Progress -->
+                            course progress
+                        </h5>
+                        <div class="w-full bg-gray-200 rounded-full h-3 overflow-hidden mt-1">
+                            <div class="bg-gradient-to-r from-orange-500 to-orange-600 h-3 rounded-full transition-all duration-500"
+                                style="width: {{ $course->progress ?? 0 }}%"></div>
+                        </div>
+                        <p class="text-xs text-gray-600 mt-1">
+                            You’ve viewed {{ $course->progress ?? 0 }}% of the course content.
+                        </p>
                     </div>
                 </div>
 

@@ -16,10 +16,8 @@ class CourseController extends Controller
         $user = Auth::user();
         
         if ($user->isAdmin()) {
-            // Admin can see all courses
             $courses = Course::with('posts')->paginate(12);
         } elseif ($user->isTeacher()) {
-            // Teachers can see their own courses and courses they're enrolled in
             $courses = Course::where('user_id', $user->id)
                 ->orWhereHas('enrollments', function($query) use ($user) {
                     $query->where('user_id', $user->id);
@@ -27,12 +25,29 @@ class CourseController extends Controller
                 ->with('posts')
                 ->paginate(10);
         } else {
-            // Regular users can only see courses they're enrolled in
             $courses = $user->enrolledCourses()->with('posts')->paginate(12);
         }
-        
+
+        // Hitung progress untuk setiap course
+        foreach ($courses as $course) {
+            $totalPosts = $course->posts->count();
+
+            if ($totalPosts > 0) {
+                // Ambil data post yang sudah dilihat user (bisa dari tabel course_views / post_views)
+                $viewedPosts = \DB::table('post_views')
+                    ->where('user_id', $user->id)
+                    ->whereIn('post_id', $course->posts->pluck('id'))
+                    ->count();
+
+                $course->progress = round(($viewedPosts / $totalPosts) * 100, 2);
+            } else {
+                $course->progress = 0;
+            }
+        }
+
         return view('courses.index', compact('courses'));
     }
+
 
     /**
      * Show the form for creating a new resource.
@@ -77,20 +92,28 @@ class CourseController extends Controller
     public function show(Course $course)
     {
         $user = Auth::user();
-        
-        // Check if user can access this course
+
+        // Access control
         if (!$user->isAdmin() && !$user->canManageCourse($course)) {
-            // Check if user is enrolled
             $isEnrolled = $course->enrollments()->where('user_id', $user->id)->exists();
             if (!$isEnrolled) {
                 return redirect()->route('courses.index')
                     ->with('error', 'You do not have access to this course.');
             }
         }
-        
+
         $course->load('posts.user');
-        return view('courses.show', compact('course'));
+
+        // === Calculate progress ===
+        $totalPosts = $course->posts()->count();
+        $viewedPosts = \App\Models\PostView::where('user_id', $user->id)
+            ->whereIn('post_id', $course->posts->pluck('id'))
+            ->count();
+        $progress = $totalPosts > 0 ? round(($viewedPosts / $totalPosts) * 100, 1) : 0;
+
+        return view('courses.show', compact('course', 'progress'));
     }
+
 
     /**
      * Show the form for editing the specified resource.

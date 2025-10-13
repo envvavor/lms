@@ -97,20 +97,50 @@ class PostController extends Controller
     public function show(Post $post)
     {
         $user = Auth::user();
-        
-        // Check if user can access this post
+
+        // --- Validasi akses course seperti sebelumnya ---
         if (!$user->isAdmin() && !$user->canManageCourse($post->course)) {
-            // Check if user is enrolled in the course
             $isEnrolled = $post->course->enrollments()->where('user_id', $user->id)->exists();
             if (!$isEnrolled) {
                 return redirect()->route('courses.index')
                     ->with('error', 'You do not have access to this post.');
             }
         }
-        
+
+        // --- Cek apakah user sudah melihat post sebelumnya ---
+        $course = $post->course;
+
+        // Urutkan berdasarkan ID (atau gunakan "order" field kalau kamu punya)
+        $previousPost = $course->posts()
+            ->where('id', '<', $post->id)
+            ->orderBy('id', 'desc')
+            ->first();
+
+        // Kalau ada post sebelumnya, pastikan sudah dilihat
+        if ($previousPost && !$user->isAdmin() && !$user->canManageCourse($course)) {
+            $hasViewedPrevious = \App\Models\PostView::where('user_id', $user->id)
+                ->where('post_id', $previousPost->id)
+                ->exists();
+
+            if (!$hasViewedPrevious) {
+                return redirect()
+                    ->route('courses.show', $course)
+                    ->with('error', 'You must view the previous post first.');
+            }
+        }
+
+        // --- Simpan progress (post yang sedang dibuka dianggap sudah dilihat) ---
+        \App\Models\PostView::firstOrCreate([
+            'user_id' => $user->id,
+            'post_id' => $post->id,
+        ]);
+
+        // --- Load relasi untuk tampilan ---
         $post->load(['course', 'user']);
+
         return view('posts.show', compact('post'));
     }
+
 
     /**
      * Show the form for editing the specified resource.

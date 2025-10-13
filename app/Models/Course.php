@@ -22,7 +22,7 @@ class Course extends Model
 
     public function posts()
     {
-        return $this->hasMany(Post::class)->orderBy('id', 'desc');
+        return $this->hasMany(Post::class)->orderBy('id', 'asc');
     }
 
     public function enrollments()
