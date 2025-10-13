@@ -204,37 +204,34 @@
                                             <video controls class="w-full rounded-lg shadow">
                                                 <source src="{{ asset($post->file_path) }}" type="video/{{ $ext }}">
                                             </video>
-                                        @elseif($ext === 'docx' || $ext === 'doc')
-                                            <div class="flex items-center justify-between bg-gray-50 border rounded-2xl p-3 mt-2">
-                                                <div class="flex items-center gap-3">
-                                                    <div class="w-10 h-10 flex items-center justify-center bg-blue-100 text-blue-600 rounded-xl">
-                                                        <i class="fas fa-paperclip"></i>
+                                        @elseif(in_array($ext, ['docx','doc','pdf']))
+                                            {{-- Responsive File Attachment Card: stack on small screens, inline on md+ --}}
+                                            <div class="w-full bg-white border rounded-2xl shadow-sm p-3 mt-2">
+                                                <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-3">
+                                                    <div class="flex items-start md:items-center gap-3">
+                                                        <div class="w-12 h-12 flex items-center justify-center bg-blue-100 text-blue-600 rounded-xl shrink-0">
+                                                            <i class="fas fa-paperclip text-lg"></i>
+                                                        </div>
+                                                        <div class="min-w-0">
+                                                            <p class="font-medium text-gray-800 truncate">{{ $cleanName }}</p>
+                                                            <p class="text-sm text-gray-500">{{ $ext === 'pdf' ? 'PDF Document' : 'Word Document' }}</p>
+                                                        </div>
                                                     </div>
-                                                    <div>
-                                                        <p class="font-medium text-gray-800">{{ $cleanName }}</p>
-                                                        <p class="text-sm text-gray-500">Word Document</p>
+
+                                                    <div class="flex-shrink-0 w-full md:w-auto">
+                                                        @if($ext === 'pdf')
+                                                            <a href="{{ asset($post->file_path) }}" target="_blank"
+                                                               class="inline-flex justify-center items-center w-full md:w-auto px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-xl hover:bg-blue-700 transition">
+                                                                <i class="fas fa-eye mr-2"></i> Open
+                                                            </a>
+                                                        @else
+                                                            <a href="{{ asset($post->file_path) }}" target="_blank"
+                                                               class="inline-flex justify-center items-center w-full md:w-auto px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-xl hover:bg-blue-700 transition">
+                                                                <i class="fas fa-download mr-2"></i> Download
+                                                            </a>
+                                                        @endif
                                                     </div>
                                                 </div>
-                                                <a href="{{ asset($post->file_path) }}" target="_blank"
-                                                class="inline-flex justify-center items-center w-full sm:w-auto px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-xl hover:bg-blue-700 transition">
-                                                    <i class="fas fa-download mr-2"></i> Download
-                                                </a>
-                                            </div>
-                                        @elseif($ext === 'pdf')
-                                            <div class="flex items-center justify-between bg-gray-50 border rounded-2xl p-3 mt-2">
-                                                <div class="flex items-center gap-3">
-                                                    <div class="w-10 h-10 flex items-center justify-center bg-blue-100 text-blue-600 rounded-xl">
-                                                        <i class="fas fa-paperclip"></i>
-                                                    </div>
-                                                    <div>
-                                                        <p class="font-medium text-gray-800">{{ $cleanName }}</p>
-                                                        <p class="text-sm text-gray-500">PDF Document</p>
-                                                    </div>
-                                                </div>
-                                                <a href="{{ asset($post->file_path) }}" target="_blank"
-                                                class="inline-flex justify-center items-center w-full sm:w-auto px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-xl hover:bg-blue-700 transition">
-                                                    <i class="fas fa-eye mr-2"></i> Open
-                                                </a>
                                             </div>
                                         @endif
                                     @endif

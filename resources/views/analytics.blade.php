@@ -14,7 +14,7 @@
             <!-- Responsive iframe wrapper -->
             <div class="relative w-full" style="padding-top: 75%;"> {{-- 4:3 ratio, bisa ubah ke 56.25% untuk 16:9 --}}
                 <iframe 
-                    src="https://lookerstudio.google.com/embed/reporting/5f225e75-7f10-46c2-9932-6ef9dc58abf2/page/6zXD"
+                    src="https://lookerstudio.google.com/embed/reporting/02ce6f15-19b4-45bd-88de-eade2e8ea438/page/6zXD"
                     class="absolute top-0 left-0 w-full h-full border-0"
                     frameborder="0"
                     scrolling="no"
