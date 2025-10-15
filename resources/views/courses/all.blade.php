@@ -106,12 +106,12 @@
                                 @else
                                     <form action="{{ route('enrollments.enroll', $course) }}" method="POST" class="flex-1 enroll-form">
                                         @csrf
-                                        <!-- ubah ke submit jika ingin work -->
-                                        <button type="button" 
-                                                class="w-full px-4 py-2.5 text-sm bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 text-white rounded-xl font-medium transition-all duration-200 transform hover:scale-105 shadow-lg hover:shadow-xl enroll-btn"
-                                                data-course-name="{{ $course->name }}">
-                                            <i class="fas fa-user-plus mr-2"></i> Join Now
-                                        </button>
+                                        <!-- If you want to perform a server-side enroll, change this anchor to a submit button. -->
+                                        <a href="https://api.whatsapp.com/send?phone=6281353025302&text={{ rawurlencode('Permisi kak saya mau masuk ke kelas '. $course->name . ', mohon dibimbing') }}" target="_blank"
+                                           class="w-full inline-flex justify-center items-center px-4 py-2.5 text-sm bg-gradient-to-r from-green-500 to-emerald-500 hover:from-green-600 hover:to-emerald-600 text-white rounded-xl font-medium transition-all duration-200 transform hover:scale-105 shadow-lg hover:shadow-xl">
+                                            <i class="fas fa-user-plus mr-2"></i>
+                                            Join Now
+                                        </a>
                                     </form>
                                 @endif
                             @endif

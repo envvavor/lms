@@ -78,27 +78,30 @@
                 @endauth
             </div>
         </div>
-        <div class="bg-[#2b2738] text-white mt-4">
-            <div class="flex justify-between items-center mb-2">
-                <h5 class="flex items-center gap-2 text-lg font-semibold">
-                    <i class="fas fa-chart-line"></i>
-                    Course Progress
-                </h5>
-                <span class="text-sm text-gray-300">{{ $progress }}%</span>
-            </div>
-
-            <div class="w-full bg-gray-700 rounded-full h-3 overflow-hidden mt-2">
-                <div
-                    class="bg-gradient-to-r from-orange-500 to-orange-600 h-3 rounded-full transition-all duration-500"
-                    style="width: {{ $progress }}%">
+        @if (Auth::user()->isUser())
+            <div class="bg-[#2b2738] text-white mt-4">
+                <div class="flex justify-between items-center mb-2">
+                    <h5 class="flex items-center gap-2 text-lg font-semibold">
+                        <i class="fas fa-chart-line"></i>
+                        Course Progress
+                    </h5>
+                    <span class="text-sm text-gray-300">{{ $progress }}%</span>
                 </div>
-            </div>
 
-            <p class="mt-3 text-sm text-gray-300">
-                You’ve viewed <span class="font-semibold text-white">{{ $progress }}%</span> of the course content.
-            </p>
-        </div>
+                <div class="w-full bg-gray-700 rounded-full h-3 overflow-hidden mt-2">
+                    <div
+                        class="bg-gradient-to-r from-orange-500 to-orange-600 h-3 rounded-full transition-all duration-500"
+                        style="width: {{ $progress }}%">
+                    </div>
+                </div>
+
+                <p class="mt-3 text-sm text-gray-300">
+                    You’ve viewed <span class="font-semibold text-white">{{ $progress }}%</span> of the course content.
+                </p>
+            </div>
+        @endif
     </div>
+    
 
     <!-- Course Content -->
     <div class="row mt-3">
@@ -115,10 +118,16 @@
                     @if($course->posts->count() > 0)
                         @foreach($course->posts as $index => $post)
                             @php
-                                $isUnlocked = $index === 0 || 
-                                    \App\Models\PostView::where('user_id', Auth::id())
-                                        ->where('post_id', $course->posts[$index - 1]->id ?? null)
-                                        ->exists();
+                                // Admins and course managers always have access
+                                $currentUser = Auth::user();
+                                if ($currentUser && ($currentUser->isAdmin() || $currentUser->canManageCourse($course))) {
+                                    $isUnlocked = true;
+                                } else {
+                                    $isUnlocked = $index === 0 || 
+                                        \App\Models\PostView::where('user_id', Auth::id())
+                                            ->where('post_id', $course->posts[$index - 1]->id ?? null)
+                                            ->exists();
+                                }
 
                                 $icons = [
                                     'text' => 'fa-file-alt',
