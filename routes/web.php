@@ -67,6 +67,8 @@ Route::middleware(['auth'])->group(function () {
     Route::resource('posts', PostController::class)->except(['create', 'store']);
     Route::get('/courses/{course}/posts/create', [PostController::class, 'create'])->name('posts.create');
     Route::post('/courses/{course}/posts', [PostController::class, 'store'])->name('posts.store');
+    // Mark post as viewed (AJAX) — used by client (e.g. when video finishes)
+    Route::post('/posts/{post}/mark-view', [PostController::class, 'markViewed'])->name('posts.markView');
 
     // Enrollment routes
     Route::post('/courses/{course}/enroll', [EnrollmentController::class, 'enroll'])->name('enrollments.enroll');

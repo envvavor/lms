@@ -7,6 +7,7 @@ use App\Models\Post;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 class PostController extends Controller
 {
@@ -63,16 +64,16 @@ class PostController extends Controller
         ]);
 
         // pastikan salah satu ada
-        if (!$request->content && !$request->hasFile('file')) {
+        if (!$request->input('content') && !$request->hasFile('file')) {
             return back()->withErrors(['content' => 'Content or File is required.']);
         }
 
         $data = [
-            'title'     => $request->title,
-            'content'   => $request->content,
+            'title'     => $request->input('title'),
+            'content'   => $request->input('content'),
             'course_id' => $course->id,
             'user_id'   => Auth::id(),
-            'link'      => $request->link,
+            'link'      => $request->input('link'),
         ];
 
         if ($request->hasFile('file')) {
@@ -130,15 +131,46 @@ class PostController extends Controller
         }
 
         // --- Simpan progress (post yang sedang dibuka dianggap sudah dilihat) ---
-        \App\Models\PostView::firstOrCreate([
-            'user_id' => $user->id,
-            'post_id' => $post->id,
-        ]);
+        // For YouTube embeds we will wait until the video finishes (client-side) before marking viewed.
+        $hasYoutubeEmbed = $post->link && (Str::contains($post->link, 'youtube.com') || Str::contains($post->link, 'youtu.be'));
+
+        if (!$hasYoutubeEmbed) {
+            \App\Models\PostView::firstOrCreate([
+                'user_id' => $user->id,
+                'post_id' => $post->id,
+            ]);
+        }
 
         // --- Load relasi untuk tampilan ---
         $post->load(['course', 'user']);
 
         return view('posts.show', compact('post'));
+    }
+
+    /**
+     * Mark a post as viewed (AJAX). Used by client when e.g. embedded video finishes.
+     */
+    public function markViewed(Post $post, Request $request)
+    {
+        $user = Auth::user();
+        if (!$user) {
+            return response()->json(['error' => 'Unauthorized'], 401);
+        }
+
+        // Authorization: similar to show()
+        if (!$user->isAdmin() && !$user->canManageCourse($post->course)) {
+            $isEnrolled = $post->course->enrollments()->where('user_id', $user->id)->exists();
+            if (!$isEnrolled) {
+                return response()->json(['error' => 'Forbidden'], 403);
+            }
+        }
+
+        \App\Models\PostView::firstOrCreate([
+            'user_id' => $user->id,
+            'post_id' => $post->id,
+        ]);
+
+        return response()->json(['success' => true]);
     }
 
 
@@ -172,14 +204,14 @@ class PostController extends Controller
             'link'    => 'nullable|url',
         ]);
     
-        if (!$request->content && !$request->hasFile('file') && !$post->file_path) {
+        if (!$request->input('content') && !$request->hasFile('file') && !$post->file_path) {
             return back()->withErrors(['content' => 'Content or File is required.']);
         }
     
         $data = [
-            'title'   => $request->title,
-            'content' => $request->content,
-            'link'    => $request->link,
+            'title'   => $request->input('title'),
+            'content' => $request->input('content'),
+            'link'    => $request->input('link'),
         ];
     
         if ($request->hasFile('file')) {

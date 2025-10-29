@@ -101,10 +101,54 @@
                                 style="max-height:350px; object-fit:cover;">
                         
                         @elseif(in_array($ext, ['mp4','webm','ogg']))
-                            <video controls class="w-100 rounded shadow" style="max-height:350px;">
-                                <source src="{{ asset($post->file_path) }}" type="video/{{ $ext }}">
-                                Your browser does not support the video tag.
-                            </video>
+                            <div>
+                                <video id="html5-video-{{ $post->id }}" controls class="w-100 rounded shadow" style="max-height:350px;">
+                                    <source src="{{ asset($post->file_path) }}" type="video/{{ $ext }}">
+                                    Your browser does not support the video tag.
+                                </video>
+
+                                {{-- Progress UI for HTML5 video --}}
+                                <div class="mt-3">
+                                    <div class="w-full bg-gray-200 rounded-full h-3 overflow-hidden">
+                                        <div id="html5-progress-bar-{{ $post->id }}" class="bg-orange-500 h-3 rounded-full" style="width:0%"></div>
+                                    </div>
+                                    <div class="text-sm text-gray-500 mt-1">Watched: <span id="html5-percent-{{ $post->id }}">0</span>%</div>
+                                </div>
+
+                                <script>
+                                    (function(){
+                                        var video = document.getElementById('html5-video-{{ $post->id }}');
+                                        var bar = document.getElementById('html5-progress-bar-{{ $post->id }}');
+                                        var pct = document.getElementById('html5-percent-{{ $post->id }}');
+                                        if (!video) return;
+
+                                        video.addEventListener('timeupdate', function(){
+                                            try {
+                                                var duration = video.duration || 0;
+                                                var current = video.currentTime || 0;
+                                                var percent = duration ? Math.floor((current / duration) * 100) : 0;
+                                                if (bar) bar.style.width = percent + '%';
+                                                if (pct) pct.textContent = percent;
+                                            } catch(e) {}
+                                        });
+
+                                        video.addEventListener('ended', function(){
+                                            // Optionally ensure server knows it's viewed (non-YT were auto-saved in controller)
+                                            // If you'd like to also mark via AJAX here, uncomment the fetch below.
+                                            /*
+                                            fetch('{{ route('posts.markView', $post) }}', {
+                                                method: 'POST',
+                                                headers: {
+                                                    'Content-Type': 'application/json',
+                                                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                                                },
+                                                body: JSON.stringify({})
+                                            });
+                                            */
+                                        });
+                                    })();
+                                </script>
+                            </div>
                         
                         @elseif($ext === 'pdf')
                             <iframe src="{{ asset($post->file_path) }}" 
@@ -164,15 +208,98 @@
                         @endphp
 
                         @if($youtubeId)
-                            <div class="relative w-full" style="padding-top: 56.25%;"> {{-- 16:9 ratio --}}
+                            <div class="relative w-full" style="padding-top: 56.25%"> {{-- 16:9 ratio --}}
                                 <iframe 
+                                    id="youtube-player-{{ $post->id }}"
                                     class="absolute top-0 left-0 w-full h-full rounded-lg shadow"
-                                    src="https://www.youtube.com/embed/{{ $youtubeId }}"
+                                    src="https://www.youtube.com/embed/{{ $youtubeId }}?enablejsapi=1"
                                     frameborder="0"
                                     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                                     allowfullscreen>
                                 </iframe>
                             </div>
+
+                            {{-- Progress UI for YouTube embed --}}
+                            <div class="mt-3">
+                                <div class="text-sm text-gray-500 mb-3">Watch The Video Until The End To Mark It To Already Watched</div>
+                                <div class="w-full bg-gray-200 rounded-full h-3 overflow-hidden">
+                                    <div id="youtube-progress-bar-{{ $post->id }}" class="bg-orange-500 h-3 rounded-full" style="width:0%"></div>
+                                </div>
+                                <div class="text-sm text-gray-500 mt-1">Watched: <span id="youtube-percent-{{ $post->id }}">0</span>%</div>
+                            </div>
+
+                            {{-- YouTube player API: update progress and mark post viewed when video ends --}}
+                            <script>
+                                (function(){
+                                    // load YouTube IFrame API if not present
+                                    if (!window.YT) {
+                                        var tag = document.createElement('script');
+                                        tag.src = "https://www.youtube.com/iframe_api";
+                                        var firstScriptTag = document.getElementsByTagName('script')[0];
+                                        firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+                                    }
+
+                                    var player_{{ $post->id }} = null;
+                                    var youtubeProgressInterval_{{ $post->id }} = null;
+
+                                    function initPlayer_{{ $post->id }}(){
+                                        try {
+                                            player_{{ $post->id }} = new YT.Player('youtube-player-{{ $post->id }}', {
+                                                events: {
+                                                    'onStateChange': function(event) {
+                                                        var progressBar = document.getElementById('youtube-progress-bar-{{ $post->id }}');
+                                                        var percentEl = document.getElementById('youtube-percent-{{ $post->id }}');
+
+                                                        if (event.data === YT.PlayerState.PLAYING) {
+                                                            // start interval to update progress
+                                                            if (youtubeProgressInterval_{{ $post->id }}) clearInterval(youtubeProgressInterval_{{ $post->id }});
+                                                            youtubeProgressInterval_{{ $post->id }} = setInterval(function(){
+                                                                try {
+                                                                    var duration = player_{{ $post->id }}.getDuration() || 0;
+                                                                    var current = player_{{ $post->id }}.getCurrentTime() || 0;
+                                                                    var percent = duration ? Math.floor((current / duration) * 100) : 0;
+                                                                    if (progressBar) progressBar.style.width = percent + '%';
+                                                                    if (percentEl) percentEl.textContent = percent;
+                                                                } catch(e) { /* ignore */ }
+                                                            }, 1000);
+                                                        } else if (event.data === YT.PlayerState.PAUSED || event.data === YT.PlayerState.BUFFERING) {
+                                                            if (youtubeProgressInterval_{{ $post->id }}) { clearInterval(youtubeProgressInterval_{{ $post->id }}); youtubeProgressInterval_{{ $post->id }} = null; }
+                                                        } else if (event.data === YT.PlayerState.ENDED) {
+                                                            if (youtubeProgressInterval_{{ $post->id }}) { clearInterval(youtubeProgressInterval_{{ $post->id }}); youtubeProgressInterval_{{ $post->id }} = null; }
+                                                            if (progressBar) { progressBar.style.width = '100%'; }
+                                                            if (percentEl) { percentEl.textContent = '100'; }
+
+                                                            // mark viewed once
+                                                            if (!window._postMarked_{{ $post->id }}) {
+                                                                window._postMarked_{{ $post->id }} = true;
+                                                                fetch('{{ route('posts.markView', $post) }}', {
+                                                                    method: 'POST',
+                                                                    headers: {
+                                                                        'Content-Type': 'application/json',
+                                                                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                                                                    },
+                                                                    body: JSON.stringify({})
+                                                                }).catch(function(e){ console.error(e); });
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            });
+                                        } catch(e) { console.error(e); }
+                                    }
+
+                                    // If API already ready, init immediately; otherwise YT will call onYouTubeIframeAPIReady
+                                    if (window.YT && window.YT.Player) {
+                                        initPlayer_{{ $post->id }}();
+                                    } else {
+                                        var old = window.onYouTubeIframeAPIReady;
+                                        window.onYouTubeIframeAPIReady = function(){
+                                            if (typeof old === 'function') try { old(); } catch(e){}
+                                            initPlayer_{{ $post->id }}();
+                                        };
+                                    }
+                                })();
+                            </script>
                         @endif
                     @endif
 
