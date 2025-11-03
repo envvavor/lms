@@ -84,6 +84,10 @@ Route::middleware(['auth'])->group(function () {
     ->middleware(['auth', 'can:view-analytics'])
     ->name('analytics');
 
+    Route::get('/profile', [UserController::class, 'profile'])->name('profile');
+    Route::get('/profile/edit', [UserController::class, 'editProfile'])->name('profile.edit');
+    Route::put('/profile/update', [UserController::class, 'updateProfile'])->name('profile.update');
+
 });
 
     

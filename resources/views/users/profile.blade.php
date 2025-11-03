@@ -3,6 +3,7 @@
 @section('title', $user->name . ' - User Details')
 
 @section('content')
+<script src="https://cdn.tailwindcss.com"></script>
 <div class="m-3 sm:m-5">
     <div class="row">
         <!-- Left Column -->
@@ -94,14 +95,98 @@
                         style="width:90px;height:90px;font-size:2rem;background:#2b2738;color:#fff;">
                         {{ strtoupper(substr($user->name, 0, 1)) }}
                     </div>
-                    <h5 class="fw-bold">{{ $user->name }}</h5>
-                    <p class="text-muted">{{ $user->email }}</p>
-                    <span class="badge text-white px-3 py-2" style="background:#2b2738;">
-                        {{ ucfirst($user->role) }}
-                    </span>
+                    <div class="flex flex-col items-center justify-center">
+                        <h5 class="fw-bold">{{ $user->name }}</h5>
+                        <p class="text-muted">{{ $user->email }}</p>
+                        <span class="badge text-white px-3 py-2" style="background:#2b2738;">
+                            {{ ucfirst($user->role) }}
+                        </span>
+                        <a href="javascript:void(0)" onclick="editProfile()"  class="badge px-3 py-2 mt-2 text-white bg-orange-600" style="text-decoration:none; margin-left:10px;">
+                            <i class="fas fa-pen me-1"></i> Edit Profile
+                        </a>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+
+<script>
+function editProfile() {
+    // Hitung lebar layar agar popup responsif
+    let width = '400px';
+    if (window.innerWidth < 640) { // HP
+        width = '90%';
+    } else if (window.innerWidth < 1024) { // Tablet
+        width = '70%';
+    } else { // Desktop besar
+        width = '400px';
+    }
+
+    Swal.fire({
+        title: 'Edit Your Profile',
+        showClass: {
+            popup: 'animate__animated animate__fadeInDown'
+        },
+        hideClass: {
+            popup: 'animate__animated animate__fadeOutUp'
+        },
+        html: `
+            <form id="editProfileForm" method="POST" action="{{ route('profile.update') }}" class="px-2">
+                @csrf
+                @method('PUT')
+                <div class="mb-3">
+                    <input type="text" name="name" value="{{ $user->name }}" 
+                           placeholder="Name" class="swal2-input w-full" required>
+                </div>
+                <div class="mb-3">
+                    <input type="email" name="email" value="{{ $user->email }}" 
+                           placeholder="Email" class="swal2-input w-full" required>
+                </div>
+                <div class="mb-3">
+                    <input type="password" name="password" placeholder="New Password (optional)" 
+                           class="swal2-input w-full">
+                </div>
+                <div class="mb-3">
+                    <input type="password" name="password_confirmation" placeholder="Confirm Password" 
+                           class="swal2-input w-full">
+                </div>
+            </form>
+        `,
+        width: width,
+        focusConfirm: false,
+        showCancelButton: true,
+        confirmButtonText: 'Save',
+        cancelButtonText: 'Cancel',
+        confirmButtonColor: '#4f46e5', // ungu
+        cancelButtonColor: '#9ca3af',
+        backdrop: `
+            rgba(0,0,0,0.4)
+        `,
+        preConfirm: () => {
+            document.getElementById('editProfileForm').submit();
+        }
+    });
+}
+</script>
+
+<style>
+.swal2-popup {
+    font-size: 0.9rem !important;
+    border-radius: 14px !important;
+    padding: 1.5rem !important;
+}
+.swal2-input {
+    margin: 0 !important;
+    width: 100% !important;
+    font-size: 0.9rem !important;
+}
+.swal2-actions {
+    gap: 10px !important;
+}
+</style>
+
 @endsection
