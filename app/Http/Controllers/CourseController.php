@@ -75,11 +75,13 @@ class CourseController extends Controller
         $request->validate([
             'name' => 'required|string|max:255',
             'description' => 'nullable|string',
+            'price' => 'required|numeric|min:0',
         ]);
 
         Course::create([
             'name' => $request->name,
             'description' => $request->description,
+            'price' => $request->price,
             'user_id' => Auth::id(),
         ]);
 
@@ -141,11 +143,13 @@ class CourseController extends Controller
         $request->validate([
             'name' => 'required|string|max:255',
             'description' => 'nullable|string',
+            'price' => 'required|numeric|min:0',
         ]);
 
         $course->update([
             'name' => $request->name,
             'description' => $request->description,
+            'price' => $request->price,
         ]);
 
         return redirect()->route('courses.show', $course)->with('success', 'Course updated successfully!');

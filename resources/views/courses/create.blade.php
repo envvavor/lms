@@ -36,6 +36,17 @@
                 @enderror
             </div>
 
+            <div>
+                <label for="price" class="block text-sm font-medium text-gray-700">Price (Rp.)</label>
+                <input type="number" id="price" name="price"
+                       value="{{ old('price') }}"
+                       class="mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm @error('price') border-red-500 @enderror"
+                       min="0" required>
+                @error('price')
+                    <p class="text-red-500 text-xs mt-1">{{ $message }}</p>
+                @enderror
+            </div>
+
             <!-- Actions -->
             <div class="flex justify-between items-center">
                 <a href="{{ route('courses.index') }}"

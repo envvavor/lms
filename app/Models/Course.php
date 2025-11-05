@@ -13,6 +13,7 @@ class Course extends Model
         'name',
         'description',
         'user_id',
+        'price',
     ];
 
     public function user()

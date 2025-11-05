@@ -60,7 +60,7 @@
                                 @if($course->price > 0)
                                     Rp. {{ number_format($course->price, 2) }}
                                 @else
-                                    Rp. 100.000
+                                    Free
                                 @endif
                             </div>
                             <div class="text-xs text-gray-500 font-medium">

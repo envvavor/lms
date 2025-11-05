@@ -195,8 +195,18 @@
             </div>
 
             <div class="bg-[#2b2738] rounded-xl shadow p-6 text-center text-white" style="border-left: 6px solid #ffa800;">
-                <div class="text-3xl font-bold">{{ App\Models\Post::count() }}</div>
-                <p class="text-sm">Total Posts</p>
+                <!-- type shit -->
+                @if (Auth::user()->isTeacher())
+                    <div class="text-3xl font-bold">{{ Auth::user()->posts()->count() }}</div>
+                @elseif (Auth::user()->isAdmin())
+                    <div class="text-3xl font-bold">{{ \App\Models\Post::count() }}</div>
+                @endif
+                <!-- type shit -->
+                @if (Auth::user()->isTeacher())
+                    <p class="text-sm">My Posts</p>
+                @elseif (Auth::user()->isAdmin())
+                    <p class="text-sm">Total Posts</p>
+                @endif
             </div>
         </div>
     @endif

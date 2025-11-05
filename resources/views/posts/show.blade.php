@@ -221,7 +221,7 @@
 
                             {{-- Progress UI for YouTube embed --}}
                             <div class="mt-3">
-                                <div class="text-sm text-gray-500 mb-3">Watch The Video Until The End To Mark It To Already Watched</div>
+                                <div class="text-sm text-gray-500 mb-3">Watch The Video Until The End To Mark It As Watched</div>
                                 <div class="w-full bg-gray-200 rounded-full h-3 overflow-hidden">
                                     <div id="youtube-progress-bar-{{ $post->id }}" class="bg-orange-500 h-3 rounded-full" style="width:0%"></div>
                                 </div>

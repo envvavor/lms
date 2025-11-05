@@ -31,6 +31,15 @@
                             <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
                     </div>
+                    
+                    <div class="mb-3">
+                        <label for="price" class="form-label">Price (Rp.)</label>
+                        <input type="number" class="form-control @error('price') is-invalid @enderror" 
+                               id="price" name="price" value="{{ old('price', $course->price) }}" min="0" required>
+                        @error('price')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                    </div>
 
                     <div class="d-flex justify-content-between">
                         <a href="{{ route('courses.show', $course) }}" class="btn btn-secondary">
