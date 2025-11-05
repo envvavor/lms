@@ -89,14 +89,6 @@ class User extends Authenticatable
 
     public function canManageCourse($course)
     {
-        \Log::info('canManageCourse check', [
-        'isAdmin' => $this->isAdmin(),
-        'isTeacher' => $this->isTeacher(),
-        'course_user_id' => $course->user_id,
-        'auth_id' => $this->id,
-        'compare' => ($course->user_id === $this->id),
-    ]);
-
         return $this->isAdmin() || ($this->isTeacher() && (int)$course->user_id === (int)$this->id);
     }
 
