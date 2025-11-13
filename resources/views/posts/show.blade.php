@@ -110,9 +110,9 @@
                                 {{-- Progress UI for HTML5 video --}}
                                 <div class="mt-3">
                                     <div class="w-full bg-gray-200 rounded-full h-3 overflow-hidden">
-                                        <div id="html5-progress-bar-{{ $post->id }}" class="bg-orange-500 h-3 rounded-full" style="width:0%"></div>
+                                        <div id="html5-progress-bar-{{ $post->id }}" class="bg-orange-500 h-3 rounded-full" style="width:{{ (isset($hasViewed) && $hasViewed) ? '100%' : '0%' }}"></div>
                                     </div>
-                                    <div class="text-sm text-gray-500 mt-1">Watched: <span id="html5-percent-{{ $post->id }}">0</span>%</div>
+                                    <div class="text-sm text-gray-500 mt-1">Watched: <span id="html5-percent-{{ $post->id }}">{{ (isset($hasViewed) && $hasViewed) ? '100' : '0' }}</span>%</div>
                                 </div>
 
                                 <script>
@@ -140,6 +140,17 @@
                                                 method: 'POST',
                                                 headers: {
                                                     'Content-Type': 'application/json',
+                                @if(isset($hasViewed) && $hasViewed)
+                                    <script>
+                                        // Ensure HTML5 progress UI shows 100% if server already marked viewed
+                                        (function(){
+                                            var bar = document.getElementById('html5-progress-bar-{{ $post->id }}');
+                                            var pct = document.getElementById('html5-percent-{{ $post->id }}');
+                                            if (bar) bar.style.width = '100%';
+                                            if (pct) pct.textContent = '100';
+                                        })();
+                                    </script>
+                                @endif
                                                     'X-CSRF-TOKEN': '{{ csrf_token() }}'
                                                 },
                                                 body: JSON.stringify({})
@@ -223,9 +234,9 @@
                             <div class="mt-3">
                                 <div class="text-sm text-gray-500 mb-3">Watch The Video Until The End To Mark It As Watched</div>
                                 <div class="w-full bg-gray-200 rounded-full h-3 overflow-hidden">
-                                    <div id="youtube-progress-bar-{{ $post->id }}" class="bg-orange-500 h-3 rounded-full" style="width:0%"></div>
+                                    <div id="youtube-progress-bar-{{ $post->id }}" class="bg-orange-500 h-3 rounded-full" style="width:{{ (isset($hasViewed) && $hasViewed) ? '100%' : '0%' }}"></div>
                                 </div>
-                                <div class="text-sm text-gray-500 mt-1">Watched: <span id="youtube-percent-{{ $post->id }}">0</span>%</div>
+                                <div class="text-sm text-gray-500 mt-1">Watched: <span id="youtube-percent-{{ $post->id }}">{{ (isset($hasViewed) && $hasViewed) ? '100' : '0' }}</span>%</div>
                             </div>
 
                             {{-- YouTube player API: update progress and mark post viewed when video ends --}}
@@ -300,6 +311,19 @@
                                     }
                                 })();
                             </script>
+                                    @if(isset($hasViewed) && $hasViewed)
+                                        <script>
+                                            // If server already marked this post viewed, ensure the YouTube UI shows 100%
+                                            (function(){
+                                                var progressBar = document.getElementById('youtube-progress-bar-{{ $post->id }}');
+                                                var percentEl = document.getElementById('youtube-percent-{{ $post->id }}');
+                                                if (progressBar) progressBar.style.width = '100%';
+                                                if (percentEl) percentEl.textContent = '100';
+                                                // Prevent double-marking from client-side (we already have it on server)
+                                                window._postMarked_{{ $post->id }} = true;
+                                            })();
+                                        </script>
+                                    @endif
                         @endif
                     @endif
 

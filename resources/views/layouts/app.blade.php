@@ -592,7 +592,7 @@
             @endif
 
             <li class="nav-item">
-                <a class="nav-link" href="#">
+                <a class="nav-link {{ request()->routeIs('setting') ? 'active' : '' }}" href="{{ route('setting')}}">
                     <i class="fas fa-cog"></i>
                     <span class="nav-text">Settings</span>
                 </a>
@@ -619,7 +619,7 @@
                         <i class="fas fa-user"></i>
                         <span>Profile</span>
                     </a>
-                    <a class="user-dropdown-item" href="#">
+                    <a class="user-dropdown-item" href="{{ route('setting') }}">
                         <i class="fas fa-cog"></i>
                         <span>Settings</span>
                     </a>

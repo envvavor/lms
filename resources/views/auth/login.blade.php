@@ -154,21 +154,50 @@
                     </div>
                 @endif
 
-                <form method="POST" action="{{ route('login') }}" class="space-y-4">
+                <!-- Tambahkan di atas form -->
+                <script src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
+
+                <form method="POST" action="{{ route('login') }}" class="space-y-4" x-data="{ showPassword: false }">
                     @csrf
                     
                     <!-- Email -->
                     <input type="email" name="email" placeholder="Email" required
-                           class="w-full px-4 py-3 rounded-lg bg-[#2b2738]/80 text-gray-200 placeholder-gray-500 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-indigo-500 @error('email') border-red-500 @enderror">
+                        class="w-full px-4 py-3 rounded-lg bg-[#2b2738]/80 text-gray-200 placeholder-gray-500 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-indigo-500 @error('email') border-red-500 @enderror">
 
-                    <!-- Password -->
-                    <input type="password" name="password" placeholder="Enter your password" required
-                           class="w-full px-4 py-3 rounded-lg bg-[#2b2738]/80 text-gray-200 placeholder-gray-500 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-indigo-500 @error('password') border-red-500 @enderror">
+                    <!-- Password with show/hide -->
+                    <div class="relative">
+                        <input :type="showPassword ? 'text' : 'password'" name="password" placeholder="Enter your password" required
+                            class="w-full px-4 py-3 pr-10 rounded-lg bg-[#2b2738]/80 text-gray-200 placeholder-gray-500 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-indigo-500 @error('password') border-red-500 @enderror">
+
+                        <!-- Toggle button -->
+                        <button type="button" @click="showPassword = !showPassword"
+                            class="absolute inset-y-0 right-3 flex items-center text-gray-400 hover:text-gray-200 focus:outline-none">
+                            <template x-if="!showPassword">
+                                <!-- Eye icon -->
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none"
+                                    viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M2.458 12C3.732 7.943 7.523 5 12 5c4.477 0 8.268 2.943 9.542 7-1.274 4.057-5.065 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                                </svg>
+                            </template>
+                            <template x-if="showPassword">
+                                <!-- Eye off icon -->
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none"
+                                    viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M13.875 18.825A10.05 10.05 0 0112 19c-4.477 0-8.268-2.943-9.542-7a9.956 9.956 0 012.807-4.444M9.88 9.88a3 3 0 104.24 4.24M6.1 6.1l11.8 11.8" />
+                                </svg>
+                            </template>
+                        </button>
+                    </div>
 
                     <!-- Remember Me + Forgot Password -->
                     <div class="flex items-center justify-between text-sm text-gray-400">
                         <label class="flex items-center">
-                            <input type="checkbox" name="remember" class="mr-2 rounded border-gray-600 bg-[#2b2738] focus:ring-indigo-500">
+                            <input type="checkbox" name="remember"
+                                class="mr-2 rounded border-gray-600 bg-[#2b2738] focus:ring-indigo-500">
                             Remember me
                         </label>
                         <a href="{{ route('password.request') }}" class="text-indigo-400 hover:underline">Forgot password?</a>
@@ -176,10 +205,11 @@
 
                     <!-- Submit Button -->
                     <button type="submit"
-                            class="w-full py-3 bg-indigo-500 hover:bg-indigo-600 text-white font-semibold rounded-lg transition">
+                        class="w-full py-3 bg-indigo-500 hover:bg-indigo-600 text-white font-semibold rounded-lg transition">
                         Log in
                     </button>
                 </form>
+
 
                 <!-- Divider -->
                 <div class="flex items-center space-x-2">

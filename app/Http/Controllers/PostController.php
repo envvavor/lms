@@ -144,7 +144,15 @@ class PostController extends Controller
         // --- Load relasi untuk tampilan ---
         $post->load(['course', 'user']);
 
-        return view('posts.show', compact('post'));
+        // Check if current user already viewed this post (useful to initialize progress UI)
+        $hasViewed = false;
+        if ($user) {
+            $hasViewed = \App\Models\PostView::where('user_id', $user->id)
+                ->where('post_id', $post->id)
+                ->exists();
+        }
+
+        return view('posts.show', compact('post', 'hasViewed'));
     }
 
     /**
